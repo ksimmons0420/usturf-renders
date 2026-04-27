@@ -8,14 +8,16 @@
   3. Paste this entire file's content into the HTML view
   4. Save. The page renders standalone — all CSS + JS are inline.
 
-  WHAT TO SWAP BEFORE GOING LIVE (search for [SWAP]):
-    [SWAP:LOGO]    — replace logo image URL
-    [SWAP:HERO]    — replace hero photo URL
-    [SWAP:GAL_1..4] — replace gallery photos
-    [SWAP:JOTFORM] — paste your JotForm embed code into the marked block
-    [SWAP:PHONE]   — replace phone number
-    [SWAP:LICENSE] — replace license number
-    [SWAP:RATING]  — replace Google rating + review count
+  WHAT'S ALREADY FILLED (scraped from usturf.com):
+    ✓ Logo URL — Shopify CDN
+    ✓ Hero image — Chance hero from homepage
+    ✓ 4 gallery photos — real Las Vegas service photos
+    ✓ Phone (725) 735-2182
+    ✓ NV Contractor Licenses (B2, C3, C4, C10)
+
+  WHAT'S STILL TO SWAP BEFORE GOING LIVE:
+    [SWAP:JOTFORM] — paste your JotForm embed snippet inside the
+                    marked <div id="usturf-lp-jotform-placeholder">.
 
   SCOPED CLASSES: every class is prefixed `.usturf-lp-` so it cannot
   collide with the active Shopify theme's CSS.
@@ -126,7 +128,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-color: #1a3a1a;
-  background-image: linear-gradient(120deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.20) 60%), url('[SWAP:HERO]');
+  background-image: linear-gradient(120deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.20) 60%), url('https://usturf.com/cdn/shop/files/US_Turf_-_Chance_Hero_Homepage_v2026.png?v=1769729354&width=1500');
   color: #FFF;
 }
 .usturf-lp-hero__inner {
@@ -477,13 +479,13 @@
   <header class="usturf-lp-header">
     <div class="usturf-lp-container usturf-lp-header__row">
       <a href="#" class="usturf-lp-header__logo">
-        <!-- [SWAP:LOGO] Replace src with US Turf logo URL from Shopify Files -->
-        <img src="[SWAP:LOGO]" alt="US Turf" onerror="this.style.display='none'">
+        <!-- https://usturf.com/cdn/shop/files/us_turf_logo_website-2.png?v=1674593171&width=600 Replace src with US Turf logo URL from Shopify Files -->
+        <img src="https://usturf.com/cdn/shop/files/us_turf_logo_website-2.png?v=1674593171&width=600" alt="US Turf" onerror="this.style.display='none'">
         <span class="usturf-lp-header__brand-text">US TURF</span>
       </a>
       <div class="usturf-lp-header__cta">
         <div class="usturf-lp-header__phone">
-          <span>Call:</span> <a href="tel:[SWAP:PHONE]">[SWAP:PHONE]</a>
+          <span>Call:</span> <a href="tel:7257352182">(725) 735-2182</a>
         </div>
         <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
       </div>
@@ -524,7 +526,8 @@
         <p class="usturf-lp-form-card__sub">Tell us about your yard. We'll come measure for free.</p>
         <div class="usturf-lp-form-card__badges">
           <span class="usturf-lp-form-card__badge">✓ Licensed &amp; Insured</span>
-          <span class="usturf-lp-form-card__badge">★ Top-Rated</span>
+          <span class="usturf-lp-form-card__badge">★ Best of Las Vegas 2025</span>
+          <span class="usturf-lp-form-card__badge">🏒 VGK Partner</span>
         </div>
 
         <!-- =========================================================
@@ -556,10 +559,10 @@
         <p class="usturf-lp-section__sub">Providing premium artificial turf solutions across Greater Las Vegas — for the homes and yards in your neighborhood.</p>
       </div>
       <div class="usturf-lp-gallery">
-        <img src="[SWAP:GAL_1]" alt="US Turf install — front yard" onerror="this.style.background='#e8e8e8'">
-        <img src="[SWAP:GAL_2]" alt="US Turf install — backyard with palms" onerror="this.style.background='#e8e8e8'">
-        <img src="[SWAP:GAL_3]" alt="US Turf install — putting green" onerror="this.style.background='#e8e8e8'">
-        <img src="[SWAP:GAL_4]" alt="US Turf install — paver patio" onerror="this.style.background='#e8e8e8'">
+        <img src="https://usturf.com/cdn/shop/files/US_Turf_-_Artificial_Grass_-_Las_Vegas_-_Services_-_Photo_-6.jpg?v=1675142828&width=1500" alt="US Turf install — front yard" onerror="this.style.background='#e8e8e8'">
+        <img src="https://usturf.com/cdn/shop/files/US_Turf_-_Artificial_Grass_-_Las_Vegas_-_Services_-_Photo_-71.jpg?v=1675143945&width=1500" alt="US Turf install — backyard with palms" onerror="this.style.background='#e8e8e8'">
+        <img src="https://usturf.com/cdn/shop/files/US_Turf_-_Artificial_Grass_-_Las_Vegas_-_Services_-_Photo_-46.jpg?v=1675146306&width=1500" alt="US Turf install — putting green" onerror="this.style.background='#e8e8e8'">
+        <img src="https://usturf.com/cdn/shop/files/US_Turf_-_Artificial_Grass_-_Las_Vegas_-_Services_-_Photo_-35.jpg?v=1675142539&width=1500" alt="US Turf install — paver patio" onerror="this.style.background='#e8e8e8'">
       </div>
       <div class="usturf-lp-section__cta-row">
         <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
@@ -704,7 +707,7 @@
         <details class="usturf-lp-faq-item">
           <summary>Are you licensed and insured?</summary>
           <div class="usturf-lp-faq-item__body">
-            Yes — US Turf is fully licensed and insured. We've been a family-owned Las Vegas company since 2003 with hundreds of happy customers and a top rating. License #[SWAP:LICENSE].
+            Yes — US Turf is fully licensed and insured. We've been a family-owned Las Vegas company since 2003 with hundreds of happy customers, a top rating, and we're the official turf partner of the Vegas Golden Knights. NV Contractor Licenses: B2 #0081302, C3 #0081384, C4 #0081385, C10 #0089330.
           </div>
         </details>
       </div>
@@ -717,8 +720,8 @@
   <!-- ============ FOOTER ============ -->
   <footer class="usturf-lp-footer">
     <div class="usturf-lp-container">
-      <img src="[SWAP:LOGO]" alt="US Turf" onerror="this.style.display='none'">
-      <div>© 2026 US Turf. All rights reserved. License #[SWAP:LICENSE].</div>
+      <img src="https://usturf.com/cdn/shop/files/us_turf_logo_website-2.png?v=1674593171&width=600" alt="US Turf" onerror="this.style.display='none'">
+      <div>© 2026 US Turf. All rights reserved. NV Licenses: B2 #0081302 · C3 #0081384 · C4 #0081385 · C10 #0089330</div>
       <div class="usturf-lp-footer__links">
         <a href="/policies/privacy-policy">Privacy Policy</a>
         <a href="/policies/terms-of-service">Terms of Service</a>
