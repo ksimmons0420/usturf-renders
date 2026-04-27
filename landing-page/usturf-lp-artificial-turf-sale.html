@@ -8,16 +8,13 @@
   3. Paste this entire file's content into the HTML view
   4. Save. The page renders standalone — all CSS + JS are inline.
 
-  WHAT'S ALREADY FILLED (scraped from usturf.com):
+  EVERYTHING IS FILLED — file is paste-ready:
     ✓ Logo URL — Shopify CDN
     ✓ Hero image — Chance hero from homepage
     ✓ 4 gallery photos — real Las Vegas service photos
     ✓ Phone (725) 735-2182
     ✓ NV Contractor Licenses (B2, C3, C4, C10)
-
-  WHAT'S STILL TO SWAP BEFORE GOING LIVE:
-    [SWAP:JOTFORM] — paste your JotForm embed snippet inside the
-                    marked <div id="usturf-lp-jotform-placeholder">.
+    ✓ JotForm embed — Form ID 260847354072156
 
   SCOPED CLASSES: every class is prefixed `.usturf-lp-` so it cannot
   collide with the active Shopify theme's CSS.
@@ -530,21 +527,10 @@
           <span class="usturf-lp-form-card__badge">🏒 VGK Partner</span>
         </div>
 
-        <!-- =========================================================
-             [SWAP:JOTFORM]
-             Paste your JotForm embed snippet directly below this comment.
-             Standard JotForm script embed looks like:
-
-             <script type="text/javascript"
-               src="https://form.jotform.com/jsform/{YOUR_FORM_ID}"></script>
-
-             Or iframe embed:
-             <iframe src="https://form.jotform.com/{YOUR_FORM_ID}"
-                     style="width:100%;min-height:520px;border:0;"></iframe>
-             ========================================================= -->
-
-        <div id="usturf-lp-jotform-placeholder" style="background:var(--cream);border:1px dashed var(--green);border-radius:10px;padding:28px;text-align:center;color:var(--mid-grey);font-size:14px;">
-          [SWAP:JOTFORM] — paste your JotForm embed code here
+        <!-- JotForm embed — Form ID 260847354072156 -->
+        <div id="usturf-lp-jotform-wrap">
+          <script type="text/javascript"
+                  src="https://form.jotform.com/jsform/260847354072156"></script>
         </div>
 
       </div>
