@@ -42,10 +42,20 @@ body:has(.usturf-lp) main {
   max-width: none !important;
 }
 body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp),
-body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) > * {
+body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) > *,
+body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) .page-width,
+body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) .page-width--narrow,
+body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) .rte {
   padding: 0 !important;
   margin: 0 !important;
   max-width: none !important;
+  width: 100% !important;
+}
+/* Hide the auto-generated page title H1 ("social2026" or whatever the
+   page handle is) — Shopify renders this above the page content by default */
+body:has(.usturf-lp) .main-page-title,
+body:has(.usturf-lp) .page-title {
+  display: none !important;
 }
 
 /* =========================================================================
