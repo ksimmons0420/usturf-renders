@@ -668,6 +668,40 @@
             </label>
           </div>
 
+          <!-- Appointment — visible date + time inputs are combined into q7_appointment[date]
+               on submit (JotForm expects a single MM/DD/YYYY HH:MM AM/PM string). -->
+          <div class="usturf-lp-form__row">
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">Preferred Date</span>
+              <input type="date" id="usturf-lp-appt-date-visible" required>
+            </label>
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">Preferred Time</span>
+              <select id="usturf-lp-appt-time-visible" required>
+                <option value="">Select time…</option>
+                <option value="08:00 AM">8:00 AM</option>
+                <option value="09:00 AM">9:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="01:00 PM">1:00 PM</option>
+                <option value="02:00 PM">2:00 PM</option>
+                <option value="03:00 PM">3:00 PM</option>
+                <option value="04:00 PM">4:00 PM</option>
+                <option value="05:00 PM">5:00 PM</option>
+              </select>
+            </label>
+          </div>
+          <p class="usturf-lp-form__fineprint" style="margin-top:0;text-align:left;">
+            We'll confirm your slot by phone within 1 business day.
+          </p>
+
+          <!-- Hidden JotForm appointment fields — populated on submit -->
+          <input type="hidden" name="q7_appointment[date]" id="usturf-lp-appt-date-hidden">
+          <input type="hidden" name="q7_appointment[duration]" value="30">
+          <input type="hidden" name="q7_appointment[implementation]" value="new">
+          <input type="hidden" name="q7_appointment[timezone]" value="America/Los_Angeles (GMT-08:00)">
+
           <button type="submit" class="usturf-lp-form__submit">
             Get My Free Estimate →
           </button>
@@ -876,6 +910,7 @@
    - Phone link click tracking hook (optional GA/Meta pixel)
    ========================================================================= */
 (function() {
+  // Smooth-scroll all "#usturf-lp-form" CTAs to the form card
   document.querySelectorAll('.usturf-lp a[href^="#usturf-lp-form"]').forEach(function(a) {
     a.addEventListener('click', function(e) {
       var t = document.getElementById('usturf-lp-form');
@@ -885,5 +920,34 @@
       }
     });
   });
+
+  // Date input minimum = today (no past dates allowed)
+  var dateInput = document.getElementById('usturf-lp-appt-date-visible');
+  if (dateInput) {
+    var today = new Date();
+    var iso = today.getFullYear() + '-' +
+              String(today.getMonth() + 1).padStart(2, '0') + '-' +
+              String(today.getDate()).padStart(2, '0');
+    dateInput.min = iso;
+  }
+
+  // Combine visible date + time into JotForm's expected MM/DD/YYYY HH:MM AM/PM
+  // string and write to hidden q7_appointment[date] on submit
+  var form = document.getElementById('usturf-lp-form-fields');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      var dEl = document.getElementById('usturf-lp-appt-date-visible');
+      var tEl = document.getElementById('usturf-lp-appt-time-visible');
+      var hidden = document.getElementById('usturf-lp-appt-date-hidden');
+      if (dEl && dEl.value && tEl && tEl.value && hidden) {
+        // dEl.value = "2026-04-29" → "04/29/2026"
+        var parts = dEl.value.split('-');
+        if (parts.length === 3) {
+          var formatted = parts[1] + '/' + parts[2] + '/' + parts[0] + ' ' + tEl.value;
+          hidden.value = formatted;
+        }
+      }
+    });
+  }
 })();
 </script>
