@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 16:22 PT · build v9 (mobile hero polish)
-  Search this file for "build v9" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 16:31 PT · build v10 (mobile decongestion)
+  Search this file for "build v10" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -428,25 +428,37 @@ body.usturf-lp-modal-open { overflow: hidden; }
   .usturf-lp-hero__sub { font-size: 16px; }
 }
 @media (max-width: 720px) {
-  /* On phones, the hero image is cropped tight and Chance's face dominates,
-     plus baked-in image text ("FINANCING AVAILABLE") shows through.
-     Anchor to top of image and darken overlay so headline copy stays sharp. */
+  /* On phones, the marketing-heavy hero image (Chance + baked-in
+     "FINANCING AVAILABLE" text) makes the layout feel cluttered. Drop
+     the image entirely on mobile and use a clean brand-green gradient
+     so hero copy stays the visual center of gravity. */
   .usturf-lp-hero {
-    background-position: top center;
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.78) 100%),
-      url('https://usturf.com/cdn/shop/files/US_Turf_-_Chance_Hero_Homepage_v2026.png?v=1769729354&width=1500');
+    background-image: linear-gradient(160deg, #1a3a1a 0%, #2d5d2a 55%, #4FAE45 100%);
+    background-color: #1a3a1a;
   }
+  /* Tighten hero internal spacing — reduce vertical density */
+  .usturf-lp-hero__inner { padding: 48px 0; gap: 28px; }
+  .usturf-lp-hero__features { gap: 8px; margin-top: 20px; }
+  .usturf-lp-hero__features li { font-size: 15px; }
+  .usturf-lp-hero__sub { margin-top: 14px; }
+  .usturf-lp-hero__cta-row { margin-top: 24px; }
+  /* The form card below the hero is redundant on mobile — hero already
+     has the same CTA opening the same modal. Keep it for trust signals
+     but trim the bulky headline + sub since hero already says the same. */
+  .usturf-lp-form-card__h,
+  .usturf-lp-form-card__sub { display: none; }
+  .usturf-lp-form-card__eyebrow { margin-bottom: 14px; }
 }
 @media (max-width: 460px) {
-  .usturf-lp-hero__inner { padding: 44px 0; gap: 24px; }
-  .usturf-lp-hero__copy h1 { font-size: 30px; }
-  .usturf-lp-hero__copy h1 strong { font-size: 40px; }
+  .usturf-lp-hero__inner { padding: 40px 0; gap: 20px; }
+  .usturf-lp-hero__copy h1 { font-size: 28px; }
+  .usturf-lp-hero__copy h1 strong { font-size: 38px; }
   .usturf-lp-hero__sub { font-size: 15px; }
-  .usturf-lp-form-card { padding: 22px; }
-  .usturf-lp-form-card__h { font-size: 20px; }
+  .usturf-lp-form-card { padding: 20px; }
   .usturf-lp-banner { font-size: 12px; padding: 8px 12px; }
   .usturf-lp-header__cta .usturf-lp-cta { padding: 10px 14px; font-size: 13px; }
+  .usturf-lp-section { padding: 44px 0; }
+  .usturf-lp-section__h { font-size: 24px; }
 }
 
 /* ---------- Section base ---------- */
