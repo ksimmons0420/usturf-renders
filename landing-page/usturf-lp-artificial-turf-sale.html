@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 16:00 PT · build v8 (modal + JS-chrome-hide)
-  Search this file for "VERSION 2026-04-27" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 16:22 PT · build v9 (mobile hero polish)
+  Search this file for "build v9" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -427,6 +427,17 @@ body.usturf-lp-modal-open { overflow: hidden; }
   .usturf-lp-hero__copy h1 strong { font-size: 48px; }
   .usturf-lp-hero__sub { font-size: 16px; }
 }
+@media (max-width: 720px) {
+  /* On phones, the hero image is cropped tight and Chance's face dominates,
+     plus baked-in image text ("FINANCING AVAILABLE") shows through.
+     Anchor to top of image and darken overlay so headline copy stays sharp. */
+  .usturf-lp-hero {
+    background-position: top center;
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.78) 100%),
+      url('https://usturf.com/cdn/shop/files/US_Turf_-_Chance_Hero_Homepage_v2026.png?v=1769729354&width=1500');
+  }
+}
 @media (max-width: 460px) {
   .usturf-lp-hero__inner { padding: 44px 0; gap: 24px; }
   .usturf-lp-hero__copy h1 { font-size: 30px; }
@@ -435,6 +446,7 @@ body.usturf-lp-modal-open { overflow: hidden; }
   .usturf-lp-form-card { padding: 22px; }
   .usturf-lp-form-card__h { font-size: 20px; }
   .usturf-lp-banner { font-size: 12px; padding: 8px 12px; }
+  .usturf-lp-header__cta .usturf-lp-cta { padding: 10px 14px; font-size: 13px; }
 }
 
 /* ---------- Section base ---------- */
