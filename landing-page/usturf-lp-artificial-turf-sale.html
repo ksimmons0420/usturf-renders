@@ -1,0 +1,756 @@
+<!--
+  US Turf — Artificial Turf Sale Landing Page
+  Drop-in HTML for Shopify Pages.
+
+  HOW TO INSTALL:
+  1. Shopify Admin → Online Store → Pages → Add page (or open existing)
+  2. Click the <> "Show HTML" icon in the rich-text editor
+  3. Paste this entire file's content into the HTML view
+  4. Save. The page renders standalone — all CSS + JS are inline.
+
+  WHAT TO SWAP BEFORE GOING LIVE (search for [SWAP]):
+    [SWAP:LOGO]    — replace logo image URL
+    [SWAP:HERO]    — replace hero photo URL
+    [SWAP:GAL_1..4] — replace gallery photos
+    [SWAP:JOTFORM] — paste your JotForm embed code into the marked block
+    [SWAP:PHONE]   — replace phone number
+    [SWAP:LICENSE] — replace license number
+    [SWAP:RATING]  — replace Google rating + review count
+
+  SCOPED CLASSES: every class is prefixed `.usturf-lp-` so it cannot
+  collide with the active Shopify theme's CSS.
+-->
+<style>
+/* =========================================================================
+   US TURF LP — SCOPED STYLES (no collisions with theme)
+   ========================================================================= */
+.usturf-lp * { box-sizing: border-box; margin: 0; padding: 0; }
+.usturf-lp {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #0F0F0F;
+  line-height: 1.5;
+  background: #FFFFFF;
+  width: 100%;
+  overflow-x: hidden;
+}
+.usturf-lp img { max-width: 100%; display: block; }
+.usturf-lp a { color: inherit; text-decoration: none; }
+.usturf-lp button { font-family: inherit; cursor: pointer; border: 0; }
+
+/* Brand variables (CSS vars on the root .usturf-lp scope) */
+.usturf-lp {
+  --green: #4FAE45;
+  --green-dark: #367D2F;
+  --gold: #FFC431;
+  --cream: #FAFAF6;
+  --light-grey: #F0F0F0;
+  --mid-grey: #6E6E6E;
+  --black: #0F0F0F;
+}
+
+.usturf-lp-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.usturf-lp-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--black);
+  font-weight: 700;
+  font-size: 17px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  white-space: nowrap;
+  text-align: center;
+}
+.usturf-lp-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+.usturf-lp-cta--green { background: var(--green); color: #FFF; }
+.usturf-lp-cta--green:hover { background: var(--green-dark); }
+
+/* ---------- Top Banner ---------- */
+.usturf-lp-banner {
+  background: var(--green);
+  color: #FFF;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Header ---------- */
+.usturf-lp-header {
+  background: #FFF;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--light-grey);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.usturf-lp-header__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.usturf-lp-header__logo img { height: 44px; width: auto; }
+.usturf-lp-header__brand-text {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  color: var(--green-dark);
+}
+.usturf-lp-header__cta { display: flex; align-items: center; gap: 14px; }
+.usturf-lp-header__phone {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--black);
+}
+.usturf-lp-header__phone span { color: var(--mid-grey); font-weight: 500; }
+@media (max-width: 720px) {
+  .usturf-lp-header__phone { display: none; }
+  .usturf-lp-header__cta .usturf-lp-cta { padding: 12px 18px; font-size: 14px; }
+}
+
+/* ---------- Hero ---------- */
+.usturf-lp-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #1a3a1a;
+  background-image: linear-gradient(120deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.20) 60%), url('[SWAP:HERO]');
+  color: #FFF;
+}
+.usturf-lp-hero__inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 80px 0;
+}
+.usturf-lp-hero__copy h1 {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.usturf-lp-hero__copy h1 strong {
+  display: block;
+  color: var(--gold);
+  font-size: 64px;
+  margin-top: 6px;
+}
+.usturf-lp-hero__sub {
+  margin-top: 18px;
+  font-size: 18px;
+  max-width: 560px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.92);
+}
+.usturf-lp-hero__features {
+  list-style: none;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.usturf-lp-hero__features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 16px;
+}
+.usturf-lp-hero__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #FFF;
+  font-weight: 900;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.usturf-lp-hero__cta-row { margin-top: 32px; }
+.usturf-lp-hero__disclaimer {
+  margin-top: 14px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+}
+
+/* Hero form card */
+.usturf-lp-form-card {
+  background: #FFF;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+  color: var(--black);
+}
+.usturf-lp-form-card__eyebrow {
+  display: inline-block;
+  background: var(--cream);
+  color: var(--green-dark);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.usturf-lp-form-card__h {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 12px 0 8px;
+}
+.usturf-lp-form-card__sub {
+  font-size: 14px;
+  color: var(--mid-grey);
+  margin-bottom: 18px;
+}
+.usturf-lp-form-card__badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.usturf-lp-form-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--cream);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--green-dark);
+}
+
+@media (max-width: 900px) {
+  .usturf-lp-hero__inner { grid-template-columns: 1fr; gap: 32px; padding: 56px 0; }
+  .usturf-lp-hero__copy h1 { font-size: 36px; }
+  .usturf-lp-hero__copy h1 strong { font-size: 48px; }
+  .usturf-lp-hero__sub { font-size: 16px; }
+}
+
+/* ---------- Section base ---------- */
+.usturf-lp-section { padding: 72px 0; }
+.usturf-lp-section--alt { background: var(--cream); }
+.usturf-lp-section__head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+.usturf-lp-section__h {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.usturf-lp-section__sub {
+  margin-top: 14px;
+  font-size: 17px;
+  color: var(--mid-grey);
+}
+.usturf-lp-section__cta-row { text-align: center; margin-top: 40px; }
+@media (max-width: 720px) {
+  .usturf-lp-section { padding: 56px 0; }
+  .usturf-lp-section__h { font-size: 28px; }
+}
+
+/* ---------- Gallery ---------- */
+.usturf-lp-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.usturf-lp-gallery img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 12px;
+}
+@media (max-width: 720px) {
+  .usturf-lp-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- Benefits 4-col ---------- */
+.usturf-lp-benefits {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.usturf-lp-benefit {
+  background: #FFF;
+  border-radius: 14px;
+  padding: 28px 22px;
+  text-align: center;
+  border: 1px solid var(--light-grey);
+}
+.usturf-lp-benefit__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #FFF;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+}
+.usturf-lp-benefit__h {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.usturf-lp-benefit__body {
+  font-size: 14px;
+  color: var(--mid-grey);
+  line-height: 1.55;
+}
+@media (max-width: 900px) {
+  .usturf-lp-benefits { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .usturf-lp-benefits { grid-template-columns: 1fr; }
+}
+
+/* ---------- Testimonials ---------- */
+.usturf-lp-testimonials {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.usturf-lp-testimonial {
+  background: #FFF;
+  border-radius: 14px;
+  padding: 28px;
+  border: 1px solid var(--light-grey);
+}
+.usturf-lp-testimonial__stars {
+  color: var(--gold);
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.usturf-lp-testimonial__body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--black);
+  margin-bottom: 18px;
+}
+.usturf-lp-testimonial__name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--mid-grey);
+}
+@media (max-width: 900px) {
+  .usturf-lp-testimonials { grid-template-columns: 1fr; }
+}
+
+/* ---------- Process ---------- */
+.usturf-lp-process {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.usturf-lp-step {
+  text-align: center;
+  padding: 24px;
+}
+.usturf-lp-step__num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #FFF;
+  font-weight: 900;
+  font-size: 22px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.usturf-lp-step__h { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.usturf-lp-step__body { font-size: 14px; color: var(--mid-grey); line-height: 1.55; }
+@media (max-width: 720px) { .usturf-lp-process { grid-template-columns: 1fr; } }
+
+/* ---------- Service area ---------- */
+.usturf-lp-areas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.usturf-lp-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #FFF;
+  border: 1px solid var(--light-grey);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.usturf-lp-area::before {
+  content: "✓";
+  color: var(--green);
+  font-weight: 900;
+}
+@media (max-width: 720px) { .usturf-lp-areas { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- FAQ ---------- */
+.usturf-lp-faq { max-width: 820px; margin: 0 auto; }
+.usturf-lp-faq-item {
+  border: 1px solid var(--light-grey);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: #FFF;
+  overflow: hidden;
+}
+.usturf-lp-faq-item summary {
+  padding: 20px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.usturf-lp-faq-item summary::-webkit-details-marker { display: none; }
+.usturf-lp-faq-item summary::after {
+  content: "+";
+  font-size: 22px;
+  color: var(--green);
+  font-weight: 700;
+}
+.usturf-lp-faq-item[open] summary::after { content: "−"; }
+.usturf-lp-faq-item__body {
+  padding: 0 24px 22px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--mid-grey);
+}
+
+/* ---------- Footer ---------- */
+.usturf-lp-footer {
+  background: var(--black);
+  color: #BBB;
+  padding: 32px 0;
+  text-align: center;
+  font-size: 13px;
+}
+.usturf-lp-footer img { height: 36px; margin: 0 auto 14px; opacity: 0.85; }
+.usturf-lp-footer__links {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.usturf-lp-footer__links a:hover { color: #FFF; }
+
+</style>
+
+<div class="usturf-lp">
+
+  <!-- ============ TOP BANNER ============ -->
+  <div class="usturf-lp-banner">
+    LIMITED-TIME OFFER · 0% INTEREST FOR 18 MONTHS · VEGAS WATER REBATES UP TO $7/SQ. FT
+  </div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="usturf-lp-header">
+    <div class="usturf-lp-container usturf-lp-header__row">
+      <a href="#" class="usturf-lp-header__logo">
+        <!-- [SWAP:LOGO] Replace src with US Turf logo URL from Shopify Files -->
+        <img src="[SWAP:LOGO]" alt="US Turf" onerror="this.style.display='none'">
+        <span class="usturf-lp-header__brand-text">US TURF</span>
+      </a>
+      <div class="usturf-lp-header__cta">
+        <div class="usturf-lp-header__phone">
+          <span>Call:</span> <a href="tel:[SWAP:PHONE]">[SWAP:PHONE]</a>
+        </div>
+        <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="usturf-lp-hero">
+    <div class="usturf-lp-container usturf-lp-hero__inner">
+      <div class="usturf-lp-hero__copy">
+        <div style="display:inline-block;background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px;">
+          New Artificial Turf Installation
+        </div>
+        <h1>
+          Starting at
+          <strong>$4.99/sq. ft</strong>
+        </h1>
+        <p class="usturf-lp-hero__sub">
+          Las Vegas homeowners may qualify for water rebates of up to $7/sq. ft. Family-owned Vegas turf experts since 2003 — fully licensed, fully insured, built for the desert.
+        </p>
+        <ul class="usturf-lp-hero__features">
+          <li><span class="usturf-lp-hero__check">✓</span> 0% interest financing for 18 months</li>
+          <li><span class="usturf-lp-hero__check">✓</span> 10-year warranty on installation</li>
+          <li><span class="usturf-lp-hero__check">✓</span> 100% free, transparent estimates</li>
+        </ul>
+        <div class="usturf-lp-hero__cta-row">
+          <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+        </div>
+        <p class="usturf-lp-hero__disclaimer">
+          *Pricing, financing, rebate amounts, and warranty terms subject to change. Contact us for current offers.
+        </p>
+      </div>
+
+      <!-- Hero quote card (mirrors the floating side card on Panda's LP) -->
+      <div id="usturf-lp-form" class="usturf-lp-form-card">
+        <span class="usturf-lp-form-card__eyebrow">Upgrade Your Outdoor Space</span>
+        <h2 class="usturf-lp-form-card__h">Get your FREE,<br>no-obligation estimate</h2>
+        <p class="usturf-lp-form-card__sub">Tell us about your yard. We'll come measure for free.</p>
+        <div class="usturf-lp-form-card__badges">
+          <span class="usturf-lp-form-card__badge">✓ Licensed &amp; Insured</span>
+          <span class="usturf-lp-form-card__badge">★ Top-Rated</span>
+        </div>
+
+        <!-- =========================================================
+             [SWAP:JOTFORM]
+             Paste your JotForm embed snippet directly below this comment.
+             Standard JotForm script embed looks like:
+
+             <script type="text/javascript"
+               src="https://form.jotform.com/jsform/{YOUR_FORM_ID}"></script>
+
+             Or iframe embed:
+             <iframe src="https://form.jotform.com/{YOUR_FORM_ID}"
+                     style="width:100%;min-height:520px;border:0;"></iframe>
+             ========================================================= -->
+
+        <div id="usturf-lp-jotform-placeholder" style="background:var(--cream);border:1px dashed var(--green);border-radius:10px;padding:28px;text-align:center;color:var(--mid-grey);font-size:14px;">
+          [SWAP:JOTFORM] — paste your JotForm embed code here
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="usturf-lp-section">
+    <div class="usturf-lp-container">
+      <div class="usturf-lp-section__head">
+        <h2 class="usturf-lp-section__h">Real Local Installs. Real Local Team.</h2>
+        <p class="usturf-lp-section__sub">Providing premium artificial turf solutions across Greater Las Vegas — for the homes and yards in your neighborhood.</p>
+      </div>
+      <div class="usturf-lp-gallery">
+        <img src="[SWAP:GAL_1]" alt="US Turf install — front yard" onerror="this.style.background='#e8e8e8'">
+        <img src="[SWAP:GAL_2]" alt="US Turf install — backyard with palms" onerror="this.style.background='#e8e8e8'">
+        <img src="[SWAP:GAL_3]" alt="US Turf install — putting green" onerror="this.style.background='#e8e8e8'">
+        <img src="[SWAP:GAL_4]" alt="US Turf install — paver patio" onerror="this.style.background='#e8e8e8'">
+      </div>
+      <div class="usturf-lp-section__cta-row">
+        <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BENEFITS 4-COL ============ -->
+  <section class="usturf-lp-section usturf-lp-section--alt">
+    <div class="usturf-lp-container">
+      <div class="usturf-lp-benefits">
+        <div class="usturf-lp-benefit">
+          <div class="usturf-lp-benefit__icon">$</div>
+          <h3 class="usturf-lp-benefit__h">Exceptional Value</h3>
+          <p class="usturf-lp-benefit__body">Premium turf installation starting at $4.99/sq. ft, with 0% interest financing for 18 months.</p>
+        </div>
+        <div class="usturf-lp-benefit">
+          <div class="usturf-lp-benefit__icon">★</div>
+          <h3 class="usturf-lp-benefit__h">Massive Rebates</h3>
+          <p class="usturf-lp-benefit__body">Vegas water-conservation rebates of up to $7/sq. ft. We handle all the paperwork.</p>
+        </div>
+        <div class="usturf-lp-benefit">
+          <div class="usturf-lp-benefit__icon">✓</div>
+          <h3 class="usturf-lp-benefit__h">Unbeatable Warranties</h3>
+          <p class="usturf-lp-benefit__body">Robust 10-year warranty on materials and installation. Built for the Mojave.</p>
+        </div>
+        <div class="usturf-lp-benefit">
+          <div class="usturf-lp-benefit__icon">✎</div>
+          <h3 class="usturf-lp-benefit__h">Upfront Pricing</h3>
+          <p class="usturf-lp-benefit__body">100% free, transparent estimates. No surprises, no upselling — just a real number for your yard.</p>
+        </div>
+      </div>
+      <div class="usturf-lp-section__cta-row">
+        <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="usturf-lp-section">
+    <div class="usturf-lp-container">
+      <div class="usturf-lp-section__head">
+        <h2 class="usturf-lp-section__h">Trusted Across Greater Las Vegas</h2>
+        <p class="usturf-lp-section__sub">Don't just take our word for it — hear directly from our hundreds of happy customers.</p>
+      </div>
+      <div class="usturf-lp-testimonials">
+        <div class="usturf-lp-testimonial">
+          <div class="usturf-lp-testimonial__stars">★★★★★</div>
+          <p class="usturf-lp-testimonial__body">Highly professional from start to finish. Crew was efficient, clean, and the turf looks unbelievable. Easily the best home upgrade we've made.</p>
+          <div class="usturf-lp-testimonial__name">— Chezka S.</div>
+        </div>
+        <div class="usturf-lp-testimonial">
+          <div class="usturf-lp-testimonial__stars">★★★★★</div>
+          <p class="usturf-lp-testimonial__body">Saved us money, looks gorgeous year-round, and the installation was painless. They handled the rebate paperwork too. Would 100% recommend to neighbors.</p>
+          <div class="usturf-lp-testimonial__name">— June G.</div>
+        </div>
+        <div class="usturf-lp-testimonial">
+          <div class="usturf-lp-testimonial__stars">★★★★★</div>
+          <p class="usturf-lp-testimonial__body">From the free estimate to the final cleanup, top-tier all around. Our backyard is unrecognizable. Worth every dollar.</p>
+          <div class="usturf-lp-testimonial__name">— Van J.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="usturf-lp-section usturf-lp-section--alt">
+    <div class="usturf-lp-container">
+      <div class="usturf-lp-section__head">
+        <h2 class="usturf-lp-section__h">Upgrading Your Yard Doesn't Have To Be Stressful</h2>
+        <p class="usturf-lp-section__sub">A straightforward, three-step process to a yard you'll love.</p>
+      </div>
+      <div class="usturf-lp-process">
+        <div class="usturf-lp-step">
+          <div class="usturf-lp-step__num">1</div>
+          <h3 class="usturf-lp-step__h">Request a Quote</h3>
+          <p class="usturf-lp-step__body">Fill out the form or call. We'll schedule a time that works for you.</p>
+        </div>
+        <div class="usturf-lp-step">
+          <div class="usturf-lp-step__num">2</div>
+          <h3 class="usturf-lp-step__h">Get Your Free Estimate</h3>
+          <p class="usturf-lp-step__body">We'll inspect your yard and send a transparent, no-pressure estimate.</p>
+        </div>
+        <div class="usturf-lp-step">
+          <div class="usturf-lp-step__num">3</div>
+          <h3 class="usturf-lp-step__h">Expert Installation</h3>
+          <p class="usturf-lp-step__body">Our team installs your premium turf, cleans up, and hands you a yard you'll love.</p>
+        </div>
+      </div>
+      <div class="usturf-lp-section__cta-row">
+        <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICE AREA ============ -->
+  <section class="usturf-lp-section">
+    <div class="usturf-lp-container">
+      <div class="usturf-lp-section__head">
+        <h2 class="usturf-lp-section__h">Where We Serve</h2>
+        <p class="usturf-lp-section__sub">We proudly service Greater Las Vegas. We're in your neighborhood.</p>
+      </div>
+      <div class="usturf-lp-areas">
+        <div class="usturf-lp-area">Las Vegas</div>
+        <div class="usturf-lp-area">Henderson</div>
+        <div class="usturf-lp-area">Enterprise</div>
+        <div class="usturf-lp-area">Spring Valley</div>
+        <div class="usturf-lp-area">Paradise</div>
+        <div class="usturf-lp-area">Sunrise Manor</div>
+        <div class="usturf-lp-area">Whitney</div>
+        <div class="usturf-lp-area">Winchester</div>
+        <div class="usturf-lp-area">Summerlin South</div>
+        <div class="usturf-lp-area">Boulder City</div>
+        <div class="usturf-lp-area">West Las Vegas</div>
+        <div class="usturf-lp-area">Los Prados</div>
+      </div>
+      <div class="usturf-lp-section__cta-row">
+        <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="usturf-lp-section usturf-lp-section--alt">
+    <div class="usturf-lp-container">
+      <div class="usturf-lp-section__head">
+        <h2 class="usturf-lp-section__h">Frequently Asked Questions</h2>
+      </div>
+      <div class="usturf-lp-faq">
+        <details class="usturf-lp-faq-item">
+          <summary>How much does artificial turf installation cost?</summary>
+          <div class="usturf-lp-faq-item__body">
+            US Turf installations start at $4.99/sq. ft, with 0% interest financing available for up to 18 months on approved credit. Final pricing depends on yard size, prep work, and any pavers or accessories. Every estimate is free and transparent — no surprises. *Pricing subject to change.
+          </div>
+        </details>
+        <details class="usturf-lp-faq-item">
+          <summary>How do Las Vegas water rebates work?</summary>
+          <div class="usturf-lp-faq-item__body">
+            Las Vegas homeowners may qualify for water-conservation rebates of up to $7/sq. ft when replacing live grass with artificial turf. We handle all the paperwork on your behalf — you just enjoy the savings. *Rebate amounts subject to change based on current municipal programs.
+          </div>
+        </details>
+        <details class="usturf-lp-faq-item">
+          <summary>Are you licensed and insured?</summary>
+          <div class="usturf-lp-faq-item__body">
+            Yes — US Turf is fully licensed and insured. We've been a family-owned Las Vegas company since 2003 with hundreds of happy customers and a top rating. License #[SWAP:LICENSE].
+          </div>
+        </details>
+      </div>
+      <div class="usturf-lp-section__cta-row">
+        <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="usturf-lp-footer">
+    <div class="usturf-lp-container">
+      <img src="[SWAP:LOGO]" alt="US Turf" onerror="this.style.display='none'">
+      <div>© 2026 US Turf. All rights reserved. License #[SWAP:LICENSE].</div>
+      <div class="usturf-lp-footer__links">
+        <a href="/policies/privacy-policy">Privacy Policy</a>
+        <a href="/policies/terms-of-service">Terms of Service</a>
+      </div>
+      <div style="margin-top:14px;font-size:11px;color:#777;">
+        *Pricing, financing terms, rebate amounts, and warranty details subject to change. Contact us for current offers.
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Google Fonts: Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+/* =========================================================================
+   US TURF LP — minimal JS
+   - Smooth scroll for anchor CTAs
+   - Phone link click tracking hook (optional GA/Meta pixel)
+   ========================================================================= */
+(function() {
+  document.querySelectorAll('.usturf-lp a[href^="#usturf-lp-form"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var t = document.getElementById('usturf-lp-form');
+      if (t) {
+        e.preventDefault();
+        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+})();
+</script>
