@@ -21,6 +21,34 @@
 -->
 <style>
 /* =========================================================================
+   SHOPIFY THEME CHROME OVERRIDE — page-scoped, doesn't affect other pages
+   This LP is designed to render full-page. Hide the theme's announcement
+   bar, header, footer, newsletter, and any sibling sections that the
+   theme injects above/below the Page Content section. Scoped via
+   body:has(.usturf-lp) so only THIS page (or any with the LP) is changed —
+   every other page on the store keeps the VGK theme intact. Requires :has()
+   (Chrome 105+, Safari 15.4+, Firefox 121+ — all current browsers).
+   ========================================================================= */
+body:has(.usturf-lp) .shopify-section-group-header-group,
+body:has(.usturf-lp) .shopify-section-group-footer-group {
+  display: none !important;
+}
+body:has(.usturf-lp) main > .shopify-section:not(:has(.usturf-lp)) {
+  display: none !important;
+}
+body:has(.usturf-lp) main {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp),
+body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) > * {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+/* =========================================================================
    US TURF LP — SCOPED STYLES (no collisions with theme)
    ========================================================================= */
 .usturf-lp * { box-sizing: border-box; margin: 0; padding: 0; }
