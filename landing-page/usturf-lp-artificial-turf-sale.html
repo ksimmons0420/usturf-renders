@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 16:31 PT · build v10 (mobile decongestion)
-  Search this file for "build v10" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 16:35 PT · build v11 (mobile hero photo + color force)
+  Search this file for "build v11" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -428,23 +428,36 @@ body.usturf-lp-modal-open { overflow: hidden; }
   .usturf-lp-hero__sub { font-size: 16px; }
 }
 @media (max-width: 720px) {
-  /* On phones, the marketing-heavy hero image (Chance + baked-in
-     "FINANCING AVAILABLE" text) makes the layout feel cluttered. Drop
-     the image entirely on mobile and use a clean brand-green gradient
-     so hero copy stays the visual center of gravity. */
+  /* Mobile hero: clean install photo (no marketing text baked in) +
+     strong gradient. Photo #46 is a wide putting-green shot with bright
+     turf — looks great cropped at any aspect ratio. */
   .usturf-lp-hero {
-    background-image: linear-gradient(160deg, #1a3a1a 0%, #2d5d2a 55%, #4FAE45 100%);
-    background-color: #1a3a1a;
+    background-position: center;
+    background-image:
+      linear-gradient(180deg, rgba(15,40,15,0.78) 0%, rgba(15,40,15,0.55) 50%, rgba(15,40,15,0.85) 100%),
+      url('https://usturf.com/cdn/shop/files/US_Turf_-_Artificial_Grass_-_Las_Vegas_-_Services_-_Photo_-46.jpg?v=1675146306&width=1500');
+  }
+  /* Force hero text colors (some Shopify themes override h1 color) */
+  .usturf-lp-hero,
+  .usturf-lp-hero__copy,
+  .usturf-lp-hero__copy h1,
+  .usturf-lp-hero__copy h1 *:not(strong),
+  .usturf-lp-hero__sub,
+  .usturf-lp-hero__features li {
+    color: #FFFFFF !important;
+  }
+  .usturf-lp-hero__copy h1 strong {
+    color: #FFC431 !important;
   }
   /* Tighten hero internal spacing — reduce vertical density */
-  .usturf-lp-hero__inner { padding: 48px 0; gap: 28px; }
-  .usturf-lp-hero__features { gap: 8px; margin-top: 20px; }
+  .usturf-lp-hero__inner { padding: 44px 0; gap: 24px; }
+  .usturf-lp-hero__features { gap: 8px; margin-top: 18px; }
   .usturf-lp-hero__features li { font-size: 15px; }
-  .usturf-lp-hero__sub { margin-top: 14px; }
-  .usturf-lp-hero__cta-row { margin-top: 24px; }
+  .usturf-lp-hero__sub { margin-top: 12px; }
+  .usturf-lp-hero__cta-row { margin-top: 22px; }
   /* The form card below the hero is redundant on mobile — hero already
-     has the same CTA opening the same modal. Keep it for trust signals
-     but trim the bulky headline + sub since hero already says the same. */
+     has the same CTA opening the same modal. Keep trust badges but
+     trim the duplicate headline + sub. */
   .usturf-lp-form-card__h,
   .usturf-lp-form-card__sub { display: none; }
   .usturf-lp-form-card__eyebrow { margin-bottom: 14px; }
