@@ -312,6 +312,15 @@
   text-align: center;
   line-height: 1.4;
 }
+.usturf-lp-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.usturf-lp-form__row--three { grid-template-columns: 1.4fr 0.6fr 0.8fr; }
+@media (max-width: 460px) {
+  .usturf-lp-form__row,
+  .usturf-lp-form__row--three { grid-template-columns: 1fr; }
+}
+
+/* Anchor offset so CTA scroll-to-form clears the sticky header */
+#usturf-lp-form { scroll-margin-top: 92px; }
 
 @media (max-width: 900px) {
   .usturf-lp-hero__inner { grid-template-columns: 1fr; gap: 32px; padding: 56px 0; }
@@ -551,10 +560,11 @@
   <!-- ============ HEADER ============ -->
   <header class="usturf-lp-header">
     <div class="usturf-lp-container usturf-lp-header__row">
-      <a href="#" class="usturf-lp-header__logo">
-        <!-- https://usturf.com/cdn/shop/files/us_turf_logo_website-2.png?v=1674593171&width=600 Replace src with US Turf logo URL from Shopify Files -->
-        <img src="https://usturf.com/cdn/shop/files/us_turf_logo_website-2.png?v=1674593171&width=600" alt="US Turf" onerror="this.style.display='none'">
-        <span class="usturf-lp-header__brand-text">US TURF</span>
+      <a href="/" class="usturf-lp-header__logo" aria-label="US Turf — home">
+        <img src="https://usturf.com/cdn/shop/files/us_turf_logo_website-2.png?v=1674593171&width=600"
+             alt="US Turf"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+        <span class="usturf-lp-header__brand-text" style="display:none;">US TURF</span>
       </a>
       <div class="usturf-lp-header__cta">
         <div class="usturf-lp-header__phone">
@@ -603,45 +613,60 @@
           <span class="usturf-lp-form-card__badge">🏒 VGK Partner</span>
         </div>
 
-        <!-- Native form — visually scoped to the LP, posts to JotForm 260847354072156 -->
+        <!-- Native form — field names verified against JotForm 260847354072156 schema -->
         <form
           id="usturf-lp-form-fields"
           class="usturf-lp-form"
-          action="https://submit.jotform.com/submit/260847354072156/"
+          action="https://submit.jotform.com/submit/260847354072156"
           method="POST"
           enctype="multipart/form-data">
 
+          <!-- Required JotForm hidden inputs — without these, submissions are rejected -->
+          <input type="hidden" name="formID" value="260847354072156">
+          <input type="hidden" name="simple_spc" value="260847354072156">
+          <input type="hidden" name="submitSource" value="usturf-lp">
+          <input type="hidden" name="website" value=""><!-- honeypot -->
+
+          <div class="usturf-lp-form__row">
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">First Name</span>
+              <input type="text" name="q3_name[first]" required placeholder="First">
+            </label>
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">Last Name</span>
+              <input type="text" name="q3_name[last]" required placeholder="Last">
+            </label>
+          </div>
+
           <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Full Name</span>
-            <input type="text" name="q3_fullName" required placeholder="Your name">
+            <span class="usturf-lp-form__label">Email</span>
+            <input type="email" name="q4_email" required placeholder="you@email.com">
           </label>
 
           <label class="usturf-lp-form__field">
             <span class="usturf-lp-form__label">Phone</span>
-            <input type="tel" name="q4_phone" required placeholder="(725) 555-0123">
+            <input type="tel" name="q6_phoneNumber[full]" required placeholder="(725) 555-0123">
           </label>
 
           <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Email</span>
-            <input type="email" name="q5_email" required placeholder="you@email.com">
+            <span class="usturf-lp-form__label">Street Address</span>
+            <input type="text" name="q5_address[addr_line1]" required placeholder="123 Main St">
           </label>
 
-          <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Property Address</span>
-            <input type="text" name="q6_address" placeholder="Street, city, ZIP">
-          </label>
-
-          <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Approx. yard size</span>
-            <select name="q7_yardSize">
-              <option value="">Select size…</option>
-              <option>Under 500 sq ft</option>
-              <option>500 – 1,000 sq ft</option>
-              <option>1,000 – 2,500 sq ft</option>
-              <option>2,500+ sq ft</option>
-              <option>Not sure — measure for me</option>
-            </select>
-          </label>
+          <div class="usturf-lp-form__row usturf-lp-form__row--three">
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">City</span>
+              <input type="text" name="q5_address[city]" required placeholder="Las Vegas">
+            </label>
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">State</span>
+              <input type="text" name="q5_address[state]" value="NV" required>
+            </label>
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">ZIP</span>
+              <input type="text" name="q5_address[postal]" required placeholder="89000">
+            </label>
+          </div>
 
           <button type="submit" class="usturf-lp-form__submit">
             Get My Free Estimate →
