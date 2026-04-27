@@ -237,6 +237,82 @@
   color: var(--green-dark);
 }
 
+/* Native form (replaces JotForm iframe — posts to JotForm submit endpoint) */
+.usturf-lp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.usturf-lp-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.usturf-lp-form__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mid-grey);
+}
+.usturf-lp-form input[type="text"],
+.usturf-lp-form input[type="tel"],
+.usturf-lp-form input[type="email"],
+.usturf-lp-form select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--black);
+  background: #FFF;
+  border: 1.5px solid var(--light-grey);
+  border-radius: 10px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.usturf-lp-form select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%236E6E6E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+.usturf-lp-form input:focus,
+.usturf-lp-form select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(79, 174, 69, 0.18);
+}
+.usturf-lp-form input::placeholder { color: #B5B5B5; }
+
+.usturf-lp-form__submit {
+  margin-top: 6px;
+  width: 100%;
+  background: var(--gold);
+  color: var(--black);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 17px;
+  padding: 16px 20px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.usturf-lp-form__submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+}
+.usturf-lp-form__fineprint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--mid-grey);
+  text-align: center;
+  line-height: 1.4;
+}
+
 @media (max-width: 900px) {
   .usturf-lp-hero__inner { grid-template-columns: 1fr; gap: 32px; padding: 56px 0; }
   .usturf-lp-hero__copy h1 { font-size: 36px; }
@@ -527,16 +603,54 @@
           <span class="usturf-lp-form-card__badge">🏒 VGK Partner</span>
         </div>
 
-        <!-- JotForm embed — Form ID 260847354072156 (iframe mode, fixed height with internal scroll) -->
-        <div id="usturf-lp-jotform-wrap" style="border-radius:10px;overflow:hidden;">
-          <iframe
-            id="usturf-lp-jotform-iframe"
-            title="US Turf — Free Estimate Request"
-            src="https://form.jotform.com/260847354072156"
-            style="width:100%;height:520px;border:0;display:block;background:transparent;"
-            scrolling="auto"
-            allow="geolocation; microphone; camera; fullscreen; payment"></iframe>
-        </div>
+        <!-- Native form — visually scoped to the LP, posts to JotForm 260847354072156 -->
+        <form
+          id="usturf-lp-form-fields"
+          class="usturf-lp-form"
+          action="https://submit.jotform.com/submit/260847354072156/"
+          method="POST"
+          enctype="multipart/form-data">
+
+          <label class="usturf-lp-form__field">
+            <span class="usturf-lp-form__label">Full Name</span>
+            <input type="text" name="q3_fullName" required placeholder="Your name">
+          </label>
+
+          <label class="usturf-lp-form__field">
+            <span class="usturf-lp-form__label">Phone</span>
+            <input type="tel" name="q4_phone" required placeholder="(725) 555-0123">
+          </label>
+
+          <label class="usturf-lp-form__field">
+            <span class="usturf-lp-form__label">Email</span>
+            <input type="email" name="q5_email" required placeholder="you@email.com">
+          </label>
+
+          <label class="usturf-lp-form__field">
+            <span class="usturf-lp-form__label">Property Address</span>
+            <input type="text" name="q6_address" placeholder="Street, city, ZIP">
+          </label>
+
+          <label class="usturf-lp-form__field">
+            <span class="usturf-lp-form__label">Approx. yard size</span>
+            <select name="q7_yardSize">
+              <option value="">Select size…</option>
+              <option>Under 500 sq ft</option>
+              <option>500 – 1,000 sq ft</option>
+              <option>1,000 – 2,500 sq ft</option>
+              <option>2,500+ sq ft</option>
+              <option>Not sure — measure for me</option>
+            </select>
+          </label>
+
+          <button type="submit" class="usturf-lp-form__submit">
+            Get My Free Estimate →
+          </button>
+
+          <p class="usturf-lp-form__fineprint">
+            We'll only contact you about your estimate. No spam, ever.
+          </p>
+        </form>
 
       </div>
     </div>
