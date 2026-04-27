@@ -1,4 +1,7 @@
 <!--
+  US TURF LP · VERSION 2026-04-27 · 16:00 PT · build v8 (modal + JS-chrome-hide)
+  Search this file for "VERSION 2026-04-27" to confirm you have the latest paste.
+  =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
 
@@ -21,45 +24,12 @@
 -->
 <style>
 /* =========================================================================
-   SHOPIFY THEME CHROME OVERRIDE — page-scoped, doesn't affect other pages
-   This LP is designed to render full-page. Hide the theme's announcement
-   bar, header, footer, newsletter, and any sibling sections that the
-   theme injects above/below the Page Content section. Scoped via
-   body:has(.usturf-lp) so only THIS page (or any with the LP) is changed —
-   every other page on the store keeps the VGK theme intact. Requires :has()
-   (Chrome 105+, Safari 15.4+, Firefox 121+ — all current browsers).
-   ========================================================================= */
-body:has(.usturf-lp) .shopify-section-group-header-group,
-body:has(.usturf-lp) .shopify-section-group-footer-group {
-  display: none !important;
-}
-body:has(.usturf-lp) main > .shopify-section:not(:has(.usturf-lp)) {
-  display: none !important;
-}
-body:has(.usturf-lp) main {
-  padding: 0 !important;
-  margin: 0 !important;
-  max-width: none !important;
-}
-body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp),
-body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) > *,
-body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) .page-width,
-body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) .page-width--narrow,
-body:has(.usturf-lp) main > .shopify-section:has(.usturf-lp) .rte {
-  padding: 0 !important;
-  margin: 0 !important;
-  max-width: none !important;
-  width: 100% !important;
-}
-/* Hide the auto-generated page title H1 ("social2026" or whatever the
-   page handle is) — Shopify renders this above the page content by default */
-body:has(.usturf-lp) .main-page-title,
-body:has(.usturf-lp) .page-title {
-  display: none !important;
-}
-
-/* =========================================================================
    US TURF LP — SCOPED STYLES (no collisions with theme)
+   NOTE: Shopify chrome (theme header/footer, page-title H1, sibling
+   sections) is hidden via JavaScript at the bottom of this file —
+   Shopify's HTML editor strips CSS rules that target sections OUTSIDE
+   the rich-text content (.shopify-section-group-*, .main-page-title,
+   etc.) so the JS approach is the only reliable route on Shopify Pages.
    ========================================================================= */
 .usturf-lp * { box-sizing: border-box; margin: 0; padding: 0; }
 .usturf-lp {
@@ -966,13 +936,78 @@ body.usturf-lp-modal-open { overflow: hidden; }
 
 <script>
 /* =========================================================================
-   US TURF LP — modal popup (JotForm) + accessibility
-   - Every "Get My Free Turf Estimate" CTA opens the JotForm popup
-   - Iframe is lazy-loaded on first open (faster initial page load)
-   - Esc key + backdrop click + close button all dismiss
-   - Body scroll-locks when modal is open
+   US TURF LP — chrome hide + modal popup
+   Shopify's HTML editor strips CSS that targets sections outside the
+   rich-text body (.shopify-section-group-header-group, .main-page-title,
+   etc.) — so we hide the theme chrome via JS instead. Inline style
+   attributes set by JS survive any sanitizer.
    ========================================================================= */
 (function() {
+
+  /* ---------- Hide Shopify theme chrome around this LP ---------- */
+  function hideShopifyChrome() {
+    // Direct selectors to nuke
+    [
+      '.shopify-section-group-header-group',
+      '.shopify-section-group-footer-group',
+      '.main-page-title',
+      '.page-title'
+    ].forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(function(el) {
+        el.style.display = 'none';
+      });
+    });
+
+    // Hide sibling Shopify sections inside <main> that aren't the one
+    // containing our LP — covers things like "Featured collection",
+    // "Collapsible content", or the Newsletter signup that themes drop
+    // around page content
+    var lp = document.querySelector('.usturf-lp');
+    if (lp) {
+      var lpSection = lp.closest('.shopify-section');
+      if (lpSection && lpSection.parentNode) {
+        Array.from(lpSection.parentNode.children).forEach(function(sib) {
+          if (sib !== lpSection && sib.classList.contains('shopify-section')) {
+            sib.style.display = 'none';
+          }
+        });
+      }
+      // Strip Shopify's narrow page-width + RTE wrappers so LP goes full bleed
+      var p = lp.parentNode;
+      while (p && p !== document.body) {
+        if (p.classList && (
+          p.classList.contains('page-width') ||
+          p.classList.contains('page-width--narrow') ||
+          p.classList.contains('rte')
+        )) {
+          p.style.maxWidth = 'none';
+          p.style.padding = '0';
+          p.style.margin = '0';
+          p.style.width = '100%';
+        }
+        p = p.parentNode;
+      }
+    }
+
+    // Reset <main>'s padding so banner sits flush at top edge
+    var main = document.querySelector('main');
+    if (main) {
+      main.style.padding = '0';
+      main.style.margin = '0';
+      main.style.maxWidth = 'none';
+    }
+  }
+
+  // Run as early as possible to minimize chrome-flash
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hideShopifyChrome);
+  } else {
+    hideShopifyChrome();
+  }
+  // Re-run after window load too — covers any sections injected by lazy theme JS
+  window.addEventListener('load', hideShopifyChrome);
+
+  /* ---------- Modal popup ---------- */
   var modal = document.getElementById('usturf-lp-jotform-modal');
   if (!modal) return;
   var iframe = modal.querySelector('.usturf-lp-modal__iframe');
