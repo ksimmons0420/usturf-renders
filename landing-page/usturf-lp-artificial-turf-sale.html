@@ -322,11 +322,111 @@
 /* Anchor offset so CTA scroll-to-form clears the sticky header */
 #usturf-lp-form { scroll-margin-top: 92px; }
 
+/* ---------- Modal (JotForm popup) ---------- */
+.usturf-lp-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.usturf-lp-modal[aria-hidden="false"] {
+  display: flex;
+  animation: usturf-lp-fade 0.18s ease-out;
+}
+@keyframes usturf-lp-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.usturf-lp-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.usturf-lp-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  height: 100%;
+  max-height: 760px;
+  background: #FFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+.usturf-lp-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0F0F0F;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--light-grey);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.usturf-lp-modal__close:hover { background: #FFF; }
+.usturf-lp-modal__iframe {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #FFF;
+}
+
+/* Body scroll-lock when modal is open */
+body.usturf-lp-modal-open { overflow: hidden; }
+
+@media (max-width: 720px) {
+  .usturf-lp-modal { padding: 0; }
+  .usturf-lp-modal__panel {
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+}
+
+/* Hero card "open modal" button + tel fallback */
+.usturf-lp-form-card__or {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--mid-grey);
+}
+.usturf-lp-form-card__or a {
+  font-weight: 700;
+  color: var(--green-dark);
+  text-decoration: underline;
+}
+
 @media (max-width: 900px) {
   .usturf-lp-hero__inner { grid-template-columns: 1fr; gap: 32px; padding: 56px 0; }
   .usturf-lp-hero__copy h1 { font-size: 36px; }
   .usturf-lp-hero__copy h1 strong { font-size: 48px; }
   .usturf-lp-hero__sub { font-size: 16px; }
+}
+@media (max-width: 460px) {
+  .usturf-lp-hero__inner { padding: 44px 0; gap: 24px; }
+  .usturf-lp-hero__copy h1 { font-size: 30px; }
+  .usturf-lp-hero__copy h1 strong { font-size: 40px; }
+  .usturf-lp-hero__sub { font-size: 15px; }
+  .usturf-lp-form-card { padding: 22px; }
+  .usturf-lp-form-card__h { font-size: 20px; }
+  .usturf-lp-banner { font-size: 12px; padding: 8px 12px; }
 }
 
 /* ---------- Section base ---------- */
@@ -602,115 +702,22 @@
         </p>
       </div>
 
-      <!-- Hero quote card (mirrors the floating side card on Panda's LP) -->
+      <!-- Hero quote card — opens JotForm in modal popup on CTA click -->
       <div id="usturf-lp-form" class="usturf-lp-form-card">
         <span class="usturf-lp-form-card__eyebrow">Upgrade Your Outdoor Space</span>
         <h2 class="usturf-lp-form-card__h">Get your FREE,<br>no-obligation estimate</h2>
-        <p class="usturf-lp-form-card__sub">Tell us about your yard. We'll come measure for free.</p>
+        <p class="usturf-lp-form-card__sub">Tell us about your yard. Pick a time. We'll come measure for free.</p>
         <div class="usturf-lp-form-card__badges">
           <span class="usturf-lp-form-card__badge">✓ Licensed &amp; Insured</span>
           <span class="usturf-lp-form-card__badge">★ Best of Las Vegas 2025</span>
           <span class="usturf-lp-form-card__badge">🏒 VGK Partner</span>
         </div>
-
-        <!-- Native form — field names verified against JotForm 260847354072156 schema -->
-        <form
-          id="usturf-lp-form-fields"
-          class="usturf-lp-form"
-          action="https://submit.jotform.com/submit/260847354072156"
-          method="POST"
-          enctype="multipart/form-data">
-
-          <!-- Required JotForm hidden inputs — without these, submissions are rejected -->
-          <input type="hidden" name="formID" value="260847354072156">
-          <input type="hidden" name="simple_spc" value="260847354072156">
-          <input type="hidden" name="submitSource" value="usturf-lp">
-          <input type="hidden" name="website" value=""><!-- honeypot -->
-
-          <div class="usturf-lp-form__row">
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">First Name</span>
-              <input type="text" name="q3_name[first]" required placeholder="First">
-            </label>
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">Last Name</span>
-              <input type="text" name="q3_name[last]" required placeholder="Last">
-            </label>
-          </div>
-
-          <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Email</span>
-            <input type="email" name="q4_email" required placeholder="you@email.com">
-          </label>
-
-          <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Phone</span>
-            <input type="tel" name="q6_phoneNumber[full]" required placeholder="(725) 555-0123">
-          </label>
-
-          <label class="usturf-lp-form__field">
-            <span class="usturf-lp-form__label">Street Address</span>
-            <input type="text" name="q5_address[addr_line1]" required placeholder="123 Main St">
-          </label>
-
-          <div class="usturf-lp-form__row usturf-lp-form__row--three">
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">City</span>
-              <input type="text" name="q5_address[city]" required placeholder="Las Vegas">
-            </label>
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">State</span>
-              <input type="text" name="q5_address[state]" value="NV" required>
-            </label>
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">ZIP</span>
-              <input type="text" name="q5_address[postal]" required placeholder="89000">
-            </label>
-          </div>
-
-          <!-- Appointment — visible date + time inputs are combined into q7_appointment[date]
-               on submit (JotForm expects a single MM/DD/YYYY HH:MM AM/PM string). -->
-          <div class="usturf-lp-form__row">
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">Preferred Date</span>
-              <input type="date" id="usturf-lp-appt-date-visible" required>
-            </label>
-            <label class="usturf-lp-form__field">
-              <span class="usturf-lp-form__label">Preferred Time</span>
-              <select id="usturf-lp-appt-time-visible" required>
-                <option value="">Select time…</option>
-                <option value="08:00 AM">8:00 AM</option>
-                <option value="09:00 AM">9:00 AM</option>
-                <option value="10:00 AM">10:00 AM</option>
-                <option value="11:00 AM">11:00 AM</option>
-                <option value="12:00 PM">12:00 PM</option>
-                <option value="01:00 PM">1:00 PM</option>
-                <option value="02:00 PM">2:00 PM</option>
-                <option value="03:00 PM">3:00 PM</option>
-                <option value="04:00 PM">4:00 PM</option>
-                <option value="05:00 PM">5:00 PM</option>
-              </select>
-            </label>
-          </div>
-          <p class="usturf-lp-form__fineprint" style="margin-top:0;text-align:left;">
-            We'll confirm your slot by phone within 1 business day.
-          </p>
-
-          <!-- Hidden JotForm appointment fields — populated on submit -->
-          <input type="hidden" name="q7_appointment[date]" id="usturf-lp-appt-date-hidden">
-          <input type="hidden" name="q7_appointment[duration]" value="30">
-          <input type="hidden" name="q7_appointment[implementation]" value="new">
-          <input type="hidden" name="q7_appointment[timezone]" value="America/Los_Angeles (GMT-08:00)">
-
-          <button type="submit" class="usturf-lp-form__submit">
-            Get My Free Estimate →
-          </button>
-
-          <p class="usturf-lp-form__fineprint">
-            We'll only contact you about your estimate. No spam, ever.
-          </p>
-        </form>
-
+        <button type="button" class="usturf-lp-cta usturf-lp-modal-open" style="width:100%;font-size:18px;padding:18px 24px;">
+          Schedule My Free Estimate →
+        </button>
+        <p class="usturf-lp-form-card__or">
+          or call <a href="tel:7257352182">(725) 735-2182</a>
+        </p>
       </div>
     </div>
   </section>
@@ -881,6 +888,22 @@
     </div>
   </section>
 
+  <!-- ============ MODAL: JotForm popup ============ -->
+  <div class="usturf-lp-modal" id="usturf-lp-jotform-modal" role="dialog" aria-modal="true" aria-label="Free estimate form" aria-hidden="true">
+    <div class="usturf-lp-modal__backdrop" data-modal-close></div>
+    <div class="usturf-lp-modal__panel">
+      <button type="button" class="usturf-lp-modal__close" aria-label="Close" data-modal-close>×</button>
+      <iframe
+        title="Free estimate form"
+        class="usturf-lp-modal__iframe"
+        data-src="https://form.jotform.com/260847354072156"
+        loading="lazy"
+        allow="geolocation; microphone; camera; payment"
+        scrolling="auto"
+        frameborder="0"></iframe>
+    </div>
+  </div>
+
   <!-- ============ FOOTER ============ -->
   <footer class="usturf-lp-footer">
     <div class="usturf-lp-container">
@@ -905,49 +928,56 @@
 
 <script>
 /* =========================================================================
-   US TURF LP — minimal JS
-   - Smooth scroll for anchor CTAs
-   - Phone link click tracking hook (optional GA/Meta pixel)
+   US TURF LP — modal popup (JotForm) + accessibility
+   - Every "Get My Free Turf Estimate" CTA opens the JotForm popup
+   - Iframe is lazy-loaded on first open (faster initial page load)
+   - Esc key + backdrop click + close button all dismiss
+   - Body scroll-locks when modal is open
    ========================================================================= */
 (function() {
-  // Smooth-scroll all "#usturf-lp-form" CTAs to the form card
-  document.querySelectorAll('.usturf-lp a[href^="#usturf-lp-form"]').forEach(function(a) {
-    a.addEventListener('click', function(e) {
-      var t = document.getElementById('usturf-lp-form');
-      if (t) {
-        e.preventDefault();
-        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  var modal = document.getElementById('usturf-lp-jotform-modal');
+  if (!modal) return;
+  var iframe = modal.querySelector('.usturf-lp-modal__iframe');
+  var iframeLoaded = false;
+  var lastFocus = null;
+
+  function openModal() {
+    lastFocus = document.activeElement;
+    if (!iframeLoaded && iframe.dataset.src) {
+      iframe.src = iframe.dataset.src;
+      iframeLoaded = true;
+    }
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('usturf-lp-modal-open');
+    var closeBtn = modal.querySelector('.usturf-lp-modal__close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('usturf-lp-modal-open');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  // Wire every existing CTA — anchors with href="#usturf-lp-form" + buttons
+  // with .usturf-lp-modal-open — to open the popup
+  document.querySelectorAll(
+    '.usturf-lp a[href^="#usturf-lp-form"], .usturf-lp .usturf-lp-modal-open'
+  ).forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal();
     });
   });
 
-  // Date input minimum = today (no past dates allowed)
-  var dateInput = document.getElementById('usturf-lp-appt-date-visible');
-  if (dateInput) {
-    var today = new Date();
-    var iso = today.getFullYear() + '-' +
-              String(today.getMonth() + 1).padStart(2, '0') + '-' +
-              String(today.getDate()).padStart(2, '0');
-    dateInput.min = iso;
-  }
-
-  // Combine visible date + time into JotForm's expected MM/DD/YYYY HH:MM AM/PM
-  // string and write to hidden q7_appointment[date] on submit
-  var form = document.getElementById('usturf-lp-form-fields');
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      var dEl = document.getElementById('usturf-lp-appt-date-visible');
-      var tEl = document.getElementById('usturf-lp-appt-time-visible');
-      var hidden = document.getElementById('usturf-lp-appt-date-hidden');
-      if (dEl && dEl.value && tEl && tEl.value && hidden) {
-        // dEl.value = "2026-04-29" → "04/29/2026"
-        var parts = dEl.value.split('-');
-        if (parts.length === 3) {
-          var formatted = parts[1] + '/' + parts[2] + '/' + parts[0] + ' ' + tEl.value;
-          hidden.value = formatted;
-        }
-      }
-    });
-  }
+  // Close on backdrop / X / Esc
+  modal.querySelectorAll('[data-modal-close]').forEach(function(el) {
+    el.addEventListener('click', closeModal);
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+      closeModal();
+    }
+  });
 })();
 </script>
