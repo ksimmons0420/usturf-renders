@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:02 PT · build v16 (sticky CTA reparent fix)
-  Search this file for "build v16" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:08 PT · build v17 (sticky CTA color fix + chat widget lift)
+  Search this file for "build v17" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -400,21 +400,25 @@
   /* Push page bottom padding up so footer copy isn't trapped behind sticky bar */
   .usturf-lp-footer { padding-bottom: 90px; }
 }
+/* NOTE: literal hex colors here (not var(--green)) because the sticky
+   CTA gets JS-reparented to <body> at runtime to escape Shopify's
+   transform stacking context — once outside .usturf-lp, CSS custom
+   properties don't cascade. */
 .usturf-lp-sticky-cta__call {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 14px 18px;
-  background: var(--green);
+  padding: 14px 20px;
+  background: #4FAE45;
   color: #FFFFFF;
   font-weight: 800;
   font-size: 15px;
   border-radius: 999px;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(79, 174, 69, 0.32);
+  box-shadow: 0 4px 14px rgba(79, 174, 69, 0.36);
 }
 .usturf-lp-sticky-cta__primary {
   flex: 1;
@@ -422,17 +426,17 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: var(--gold);
-  color: var(--black);
+  background: #FFC431;
+  color: #0F0F0F;
   font-family: inherit;
   font-weight: 800;
   font-size: 15px;
   border: 0;
   border-radius: 999px;
-  padding: 14px 18px;
+  padding: 14px 20px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(255, 196, 49, 0.4);
+  box-shadow: 0 4px 14px rgba(255, 196, 49, 0.45);
 }
 /* Hide sticky bar when modal is open (modal already covers screen) */
 body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
@@ -1198,6 +1202,34 @@ body.usturf-lp-modal-open { overflow: hidden; }
       document.body.appendChild(sticky);
     }
   }
+
+  // Push any third-party chat widget UP so it floats above the sticky
+  // CTA bar on mobile. Chat widgets typically mount async after page
+  // load, so we re-run this on a delay. Heuristic: any fixed-positioned
+  // bottom-right element within ~70px of bottom-right corner = chat.
+  function liftChatWidget() {
+    if (window.innerWidth > 720) return;
+    var stickyHeight = 80;
+    document.querySelectorAll('iframe, div, button').forEach(function(el) {
+      if (el.classList && el.classList.contains('usturf-lp-sticky-cta')) return;
+      if (el.closest && el.closest('.usturf-lp-sticky-cta')) return;
+      var s;
+      try { s = window.getComputedStyle(el); } catch (e) { return; }
+      if (s.position !== 'fixed') return;
+      var bottom = parseInt(s.bottom, 10);
+      var right = parseInt(s.right, 10);
+      if (isNaN(bottom) || isNaN(right)) return;
+      // Bottom-right anchored, near the corner = likely chat widget
+      if (bottom < 60 && right < 60) {
+        el.style.bottom = (bottom + stickyHeight) + 'px';
+        el.setAttribute('data-usturf-lp-lifted', '1');
+      }
+    });
+  }
+  // Run on ready, on load, and a few times after to catch lazy-mounted widgets
+  setTimeout(liftChatWidget, 1500);
+  setTimeout(liftChatWidget, 3500);
+  setTimeout(liftChatWidget, 7000);
 
   // Run as early as possible to minimize chrome-flash
   if (document.readyState === 'loading') {
