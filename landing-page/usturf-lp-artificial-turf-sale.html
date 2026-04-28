@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:24 PT · build v19 (real Google review data + expanded trust signals)
-  Search this file for "build v19" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:32 PT · build v20 (modal preload + scroll fix + spinner)
+  Search this file for "build v20" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -474,7 +474,7 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
   width: 100%;
   max-width: 560px;
   height: 100%;
-  max-height: 760px;
+  max-height: 90vh;
   background: #FFF;
   border-radius: 16px;
   overflow: hidden;
@@ -507,7 +507,37 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
   width: 100%;
   border: 0;
   background: #FFF;
+  -webkit-overflow-scrolling: touch;
 }
+.usturf-lp-modal__iframe[data-loaded="1"] ~ .usturf-lp-modal__loading {
+  display: none;
+}
+
+/* Loading spinner shown while iframe fetches JotForm */
+.usturf-lp-modal__loading {
+  position: absolute;
+  inset: 56px 0 0 0;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #6E6E6E;
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 1;
+}
+.usturf-lp-modal__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E8E8E8;
+  border-top-color: #4FAE45;
+  border-radius: 50%;
+  animation: usturf-lp-spin 0.7s linear infinite;
+}
+@keyframes usturf-lp-spin { to { transform: rotate(360deg); } }
 
 /* Body scroll-lock when modal is open */
 body.usturf-lp-modal-open { overflow: hidden; }
@@ -1146,10 +1176,13 @@ body.usturf-lp-modal-open { overflow: hidden; }
         title="Free estimate form"
         class="usturf-lp-modal__iframe"
         data-src="https://form.jotform.com/260847354072156"
-        loading="lazy"
         allow="geolocation; microphone; camera; payment"
-        scrolling="auto"
+        scrolling="yes"
         frameborder="0"></iframe>
+      <div class="usturf-lp-modal__loading" aria-hidden="true">
+        <div class="usturf-lp-modal__spinner"></div>
+        <div>Loading your estimate form…</div>
+      </div>
     </div>
   </div>
 
@@ -1316,15 +1349,34 @@ body.usturf-lp-modal-open { overflow: hidden; }
   var modal = document.getElementById('usturf-lp-jotform-modal');
   if (!modal) return;
   var iframe = modal.querySelector('.usturf-lp-modal__iframe');
-  var iframeLoaded = false;
+  var iframeStarted = false;
   var lastFocus = null;
+
+  // Mark iframe as fully loaded — CSS hides the spinner overlay once this fires
+  iframe.addEventListener('load', function() {
+    iframe.setAttribute('data-loaded', '1');
+  });
+
+  function startIframeLoad() {
+    if (iframeStarted || !iframe.dataset.src) return;
+    iframe.src = iframe.dataset.src;
+    iframeStarted = true;
+  }
+
+  // Preload JotForm 1.5s after page is interactive — by the time the
+  // user actually clicks a CTA, the iframe is already cached and renders
+  // instantly. Net effect: modal feels snappy instead of laggy.
+  if (document.readyState === 'complete') {
+    setTimeout(startIframeLoad, 1500);
+  } else {
+    window.addEventListener('load', function() {
+      setTimeout(startIframeLoad, 1500);
+    });
+  }
 
   function openModal() {
     lastFocus = document.activeElement;
-    if (!iframeLoaded && iframe.dataset.src) {
-      iframe.src = iframe.dataset.src;
-      iframeLoaded = true;
-    }
+    startIframeLoad();
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('usturf-lp-modal-open');
     var closeBtn = modal.querySelector('.usturf-lp-modal__close');
