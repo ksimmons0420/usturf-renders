@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:38 PT · build v21 (JotForm embed handler — proper scroll fix)
-  Search this file for "build v21" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:48 PT · build v22 (native form in modal — no iframe = no iOS scroll bug)
+  Search this file for "build v22" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -514,46 +514,29 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 .usturf-lp-modal__close:hover { background: #FFF; }
-.usturf-lp-modal__iframe {
-  display: block;
+/* Native form panel inside modal — replaces iframe entirely.
+   No iframe = no iOS touch-capture scroll bug. The wrapper handles
+   all scrolling natively, smooth on every device. */
+.usturf-lp-modal__form-wrap {
+  padding: 56px 24px 28px;
   width: 100%;
-  border: 0;
-  background: #FFF;
-  /* Initial height — JotForm's embed handler resizes this dynamically
-     once the iframe loads + on every internal content change */
-  height: 700px;
-  min-width: 100%;
-  max-width: 100%;
 }
-.usturf-lp-modal__iframe[data-loaded="1"] ~ .usturf-lp-modal__loading {
-  display: none;
+.usturf-lp-modal__h {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  color: #0F0F0F;
 }
-
-/* Loading spinner shown while iframe fetches JotForm */
-.usturf-lp-modal__loading {
-  position: absolute;
-  inset: 56px 0 0 0;
-  background: #FFF;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  color: #6E6E6E;
+.usturf-lp-modal__sub {
   font-size: 14px;
-  font-weight: 600;
-  pointer-events: none;
-  z-index: 1;
+  color: #6E6E6E;
+  margin-bottom: 20px;
 }
-.usturf-lp-modal__spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid #E8E8E8;
-  border-top-color: #4FAE45;
-  border-radius: 50%;
-  animation: usturf-lp-spin 0.7s linear infinite;
+@media (max-width: 460px) {
+  .usturf-lp-modal__form-wrap { padding: 56px 18px 24px; }
+  .usturf-lp-modal__h { font-size: 20px; }
 }
-@keyframes usturf-lp-spin { to { transform: rotate(360deg); } }
 
 /* Body scroll-lock when modal is open */
 body.usturf-lp-modal-open { overflow: hidden; }
@@ -1189,18 +1172,100 @@ body.usturf-lp-modal-open { overflow: hidden; }
     <div class="usturf-lp-modal__panel">
       <button type="button" class="usturf-lp-modal__close" aria-label="Close" data-modal-close>×</button>
       <div class="usturf-lp-modal__scroll">
-        <iframe
-          id="JotFormIFrame-260847354072156"
-          title="Free estimate form"
-          class="usturf-lp-modal__iframe"
-          data-src="https://form.jotform.com/260847354072156"
-          allow="geolocation; microphone; camera; payment"
-          allowtransparency="true"
-          scrolling="no"
-          frameborder="0"></iframe>
-        <div class="usturf-lp-modal__loading" aria-hidden="true">
-          <div class="usturf-lp-modal__spinner"></div>
-          <div>Loading your estimate form…</div>
+        <div class="usturf-lp-modal__form-wrap">
+          <h3 class="usturf-lp-modal__h">Schedule Your Free Estimate</h3>
+          <p class="usturf-lp-modal__sub">Tell us about your yard. We'll come measure for free.</p>
+
+          <form
+            id="usturf-lp-form-fields"
+            class="usturf-lp-form"
+            action="https://submit.jotform.com/submit/260847354072156"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <input type="hidden" name="formID" value="260847354072156">
+            <input type="hidden" name="simple_spc" value="260847354072156">
+            <input type="hidden" name="submitSource" value="usturf-lp-social2026">
+            <input type="hidden" name="website" value="">
+
+            <div class="usturf-lp-form__row">
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">First Name</span>
+                <input type="text" name="q3_name[first]" required placeholder="First">
+              </label>
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">Last Name</span>
+                <input type="text" name="q3_name[last]" required placeholder="Last">
+              </label>
+            </div>
+
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">Email</span>
+              <input type="email" name="q4_email" required placeholder="you@email.com">
+            </label>
+
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">Phone</span>
+              <input type="tel" name="q6_phoneNumber[full]" required placeholder="(725) 555-0123">
+            </label>
+
+            <label class="usturf-lp-form__field">
+              <span class="usturf-lp-form__label">Street Address</span>
+              <input type="text" name="q5_address[addr_line1]" required placeholder="123 Main St">
+            </label>
+            <div class="usturf-lp-form__row usturf-lp-form__row--three">
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">City</span>
+                <input type="text" name="q5_address[city]" required placeholder="Las Vegas">
+              </label>
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">State</span>
+                <input type="text" name="q5_address[state]" value="NV" required>
+              </label>
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">ZIP</span>
+                <input type="text" name="q5_address[postal]" required placeholder="89000">
+              </label>
+            </div>
+
+            <div class="usturf-lp-form__row">
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">Preferred Date</span>
+                <input type="date" id="usturf-lp-appt-date-visible" required>
+              </label>
+              <label class="usturf-lp-form__field">
+                <span class="usturf-lp-form__label">Preferred Time</span>
+                <select id="usturf-lp-appt-time-visible" required>
+                  <option value="">Select…</option>
+                  <option value="08:00 AM">8:00 AM</option>
+                  <option value="09:00 AM">9:00 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="01:00 PM">1:00 PM</option>
+                  <option value="02:00 PM">2:00 PM</option>
+                  <option value="03:00 PM">3:00 PM</option>
+                  <option value="04:00 PM">4:00 PM</option>
+                  <option value="05:00 PM">5:00 PM</option>
+                </select>
+              </label>
+            </div>
+            <p class="usturf-lp-form__fineprint" style="margin-top:0;text-align:left;">
+              We'll confirm your slot by phone within 1 business day.
+            </p>
+
+            <input type="hidden" name="q7_appointment[date]" id="usturf-lp-appt-date-hidden">
+            <input type="hidden" name="q7_appointment[duration]" value="30">
+            <input type="hidden" name="q7_appointment[implementation]" value="new">
+            <input type="hidden" name="q7_appointment[timezone]" value="America/Los_Angeles (GMT-08:00)">
+
+            <button type="submit" class="usturf-lp-form__submit">
+              Get My Free Estimate →
+            </button>
+            <p class="usturf-lp-form__fineprint">
+              We'll only contact you about your estimate. No spam, ever.
+            </p>
+          </form>
         </div>
       </div>
     </div>
@@ -1227,11 +1292,6 @@ body.usturf-lp-modal-open { overflow: hidden; }
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-<!-- JotForm official embed handler — auto-resizes iframe to content height
-     so the modal panel scrolls smoothly instead of the iframe (which has
-     a known iOS scroll-trap bug). Loaded async so it doesn't block the LP. -->
-<script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js" async></script>
 
 <script>
 /* =========================================================================
@@ -1370,52 +1430,43 @@ body.usturf-lp-modal-open { overflow: hidden; }
   // Re-run after window load too — covers any sections injected by lazy theme JS
   window.addEventListener('load', hideShopifyChrome);
 
-  /* ---------- Modal popup ---------- */
+  /* ---------- Modal popup with native form ---------- */
   var modal = document.getElementById('usturf-lp-jotform-modal');
   if (!modal) return;
-  var iframe = modal.querySelector('.usturf-lp-modal__iframe');
-  var iframeStarted = false;
   var lastFocus = null;
-
-  // Mark iframe as fully loaded — CSS hides the spinner overlay once this fires
-  iframe.addEventListener('load', function() {
-    iframe.setAttribute('data-loaded', '1');
-  });
-
-  function startIframeLoad() {
-    if (iframeStarted || !iframe.dataset.src) return;
-    iframe.src = iframe.dataset.src;
-    iframeStarted = true;
-    // Wire JotForm's official embed handler — auto-resizes the iframe
-    // to its content height on every internal layout change. Net effect:
-    // iframe never needs internal scrolling, the modal scroll container
-    // handles overflow with smooth native touch on iOS.
-    if (window.jotformEmbedHandler) {
-      window.jotformEmbedHandler(
-        "iframe[id='JotFormIFrame-260847354072156']",
-        "https://form.jotform.com/"
-      );
-    }
-  }
-
-  // Preload JotForm 1.5s after page is interactive — by the time the
-  // user actually clicks a CTA, the iframe is already cached and renders
-  // instantly. Net effect: modal feels snappy instead of laggy.
-  if (document.readyState === 'complete') {
-    setTimeout(startIframeLoad, 1500);
-  } else {
-    window.addEventListener('load', function() {
-      setTimeout(startIframeLoad, 1500);
-    });
-  }
 
   function openModal() {
     lastFocus = document.activeElement;
-    startIframeLoad();
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('usturf-lp-modal-open');
     var closeBtn = modal.querySelector('.usturf-lp-modal__close');
     if (closeBtn) closeBtn.focus();
+  }
+
+  // Date input minimum = today (no past dates)
+  var apptDate = document.getElementById('usturf-lp-appt-date-visible');
+  if (apptDate) {
+    var today = new Date();
+    apptDate.min = today.getFullYear() + '-' +
+                   String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                   String(today.getDate()).padStart(2, '0');
+  }
+
+  // On submit: combine visible date + time into JotForm's expected
+  // q7_appointment[date] string format (MM/DD/YYYY HH:MM AM/PM)
+  var form = document.getElementById('usturf-lp-form-fields');
+  if (form) {
+    form.addEventListener('submit', function() {
+      var d = document.getElementById('usturf-lp-appt-date-visible');
+      var t = document.getElementById('usturf-lp-appt-time-visible');
+      var hidden = document.getElementById('usturf-lp-appt-date-hidden');
+      if (d && d.value && t && t.value && hidden) {
+        var parts = d.value.split('-');
+        if (parts.length === 3) {
+          hidden.value = parts[1] + '/' + parts[2] + '/' + parts[0] + ' ' + t.value;
+        }
+      }
+    });
   }
 
   function closeModal() {
