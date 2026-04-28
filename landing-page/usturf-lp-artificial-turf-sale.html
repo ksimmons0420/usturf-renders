@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:38 PT · build v21 (JotForm embed handler — proper scroll fix)
-  Search this file for "build v21" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:58 PT · build v23 (desktop modal scroll fix — taller iframe + handler retry)
+  Search this file for "build v23" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -519,9 +519,12 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
   width: 100%;
   border: 0;
   background: #FFF;
-  /* Initial height — JotForm's embed handler resizes this dynamically
-     once the iframe loads + on every internal content change */
-  height: 700px;
+  /* Initial height set tall enough to fit the entire JotForm content
+     (5 fields + appointment widget + submit). The wrapper handles
+     overflow via scroll — JotForm's embed handler will refine this
+     down to real content height if it loads, but if it doesn't, we
+     never end up with a clipped form. */
+  height: 1500px;
   min-width: 100%;
   max-width: 100%;
 }
@@ -1382,19 +1385,32 @@ body.usturf-lp-modal-open { overflow: hidden; }
     iframe.setAttribute('data-loaded', '1');
   });
 
-  function startIframeLoad() {
-    if (iframeStarted || !iframe.dataset.src) return;
-    iframe.src = iframe.dataset.src;
-    iframeStarted = true;
-    // Wire JotForm's official embed handler — auto-resizes the iframe
-    // to its content height on every internal layout change. Net effect:
-    // iframe never needs internal scrolling, the modal scroll container
-    // handles overflow with smooth native touch on iOS.
+  function attachJotformEmbedHandler() {
     if (window.jotformEmbedHandler) {
       window.jotformEmbedHandler(
         "iframe[id='JotFormIFrame-260847354072156']",
         "https://form.jotform.com/"
       );
+      return true;
+    }
+    return false;
+  }
+
+  function startIframeLoad() {
+    if (iframeStarted || !iframe.dataset.src) return;
+    iframe.src = iframe.dataset.src;
+    iframeStarted = true;
+    // Try to attach JotForm's embed handler now. If the async script
+    // hasn't loaded yet, poll for up to 8s — we don't want to silently
+    // give up like the old single-shot check did.
+    if (!attachJotformEmbedHandler()) {
+      var tries = 0;
+      var iv = setInterval(function() {
+        tries++;
+        if (attachJotformEmbedHandler() || tries > 40) {
+          clearInterval(iv);
+        }
+      }, 200);
     }
   }
 
