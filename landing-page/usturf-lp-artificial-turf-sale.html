@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:14 PT · build v18 (frosted sticky bar + MutationObserver chat lift)
-  Search this file for "build v18" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:24 PT · build v19 (real Google review data + expanded trust signals)
+  Search this file for "build v19" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -522,6 +522,38 @@ body.usturf-lp-modal-open { overflow: hidden; }
   }
 }
 
+/* Hero rating badge — Google reviews trust chip placed above the eyebrow */
+.usturf-lp-hero__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 7px 14px 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF !important;
+  margin-bottom: 14px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.usturf-lp-hero__rating-stars {
+  color: #FFC431;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.usturf-lp-hero__rating-num {
+  font-weight: 800;
+}
+.usturf-lp-hero__rating-meta {
+  font-weight: 500;
+  opacity: 0.94;
+  letter-spacing: 0.01em;
+}
+
 /* Hero card "open modal" button + tel fallback */
 .usturf-lp-form-card__or {
   margin-top: 14px;
@@ -871,7 +903,15 @@ body.usturf-lp-modal-open { overflow: hidden; }
   <section class="usturf-lp-hero">
     <div class="usturf-lp-container usturf-lp-hero__inner">
       <div class="usturf-lp-hero__copy">
-        <div style="display:inline-block;background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px;">
+        <a href="https://www.google.com/search?q=US+Turf+Las+Vegas+reviews"
+           class="usturf-lp-hero__rating"
+           target="_blank" rel="noopener"
+           aria-label="4.7 stars from 472 Google reviews">
+          <span class="usturf-lp-hero__rating-stars">★★★★★</span>
+          <span class="usturf-lp-hero__rating-num">4.7</span>
+          <span class="usturf-lp-hero__rating-meta">· 472 Google reviews</span>
+        </a>
+        <div style="display:inline-block;background:rgba(255,255,255,0.14);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px;margin-left:8px;">
           New Artificial Turf Installation
         </div>
         <h1>
@@ -905,9 +945,11 @@ body.usturf-lp-modal-open { overflow: hidden; }
         <h2 class="usturf-lp-form-card__h">Get your FREE,<br>no-obligation estimate</h2>
         <p class="usturf-lp-form-card__sub">Tell us about your yard. Pick a time. We'll come measure for free.</p>
         <div class="usturf-lp-form-card__badges">
+          <span class="usturf-lp-form-card__badge">★ 4.7 / 472 Google Reviews</span>
+          <span class="usturf-lp-form-card__badge">✓ BBB Accredited</span>
           <span class="usturf-lp-form-card__badge">✓ Licensed &amp; Insured</span>
-          <span class="usturf-lp-form-card__badge">★ Best of Las Vegas 2025</span>
           <span class="usturf-lp-form-card__badge">🏒 VGK Partner</span>
+          <span class="usturf-lp-form-card__badge">💧 Water Smart Contractor</span>
         </div>
         <button type="button" class="usturf-lp-cta usturf-lp-modal-open" style="width:100%;font-size:18px;padding:18px 24px;">
           Schedule My Free Estimate →
@@ -974,7 +1016,7 @@ body.usturf-lp-modal-open { overflow: hidden; }
     <div class="usturf-lp-container">
       <div class="usturf-lp-section__head">
         <h2 class="usturf-lp-section__h">Trusted Across Greater Las Vegas</h2>
-        <p class="usturf-lp-section__sub">Don't just take our word for it — hear directly from our hundreds of happy customers.</p>
+        <p class="usturf-lp-section__sub">4.7★ across 472 Google reviews. Don't take our word for it — here's what real US Turf customers are saying.</p>
       </div>
       <div class="usturf-lp-testimonials">
         <div class="usturf-lp-testimonial">
@@ -1075,7 +1117,7 @@ body.usturf-lp-modal-open { overflow: hidden; }
         <details class="usturf-lp-faq-item">
           <summary>Are you licensed and insured?</summary>
           <div class="usturf-lp-faq-item__body">
-            Yes — US Turf is fully licensed and insured. We've been a family-owned Las Vegas company since 2003 with hundreds of happy customers, a top rating, and we're the official turf partner of the Vegas Golden Knights. NV Contractor Licenses: B2 #0081302, C3 #0081384, C4 #0081385, C10 #0089330.
+            Yes — US Turf is fully licensed and insured. Family-owned in Las Vegas since 2003, BBB Accredited, Home Advisor Screened &amp; Approved, Water Smart Contractor certified, and the official turf partner of the Vegas Golden Knights. We've earned Best of Las Vegas honors in 2021, 2022, and 2025. NV Contractor Licenses: B2 #0081302, C3 #0081384, C4 #0081385, C10 #0089330.
           </div>
         </details>
       </div>
