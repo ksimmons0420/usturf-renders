@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:08 PT · build v17 (sticky CTA color fix + chat widget lift)
-  Search this file for "build v17" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:14 PT · build v18 (frosted sticky bar + MutationObserver chat lift)
+  Search this file for "build v18" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -391,11 +391,14 @@
     left: 0;
     right: 0;
     z-index: 9000;
-    background: #FFFFFF;
+    /* Frosted-glass translucent background — content blurs through cleanly */
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
     gap: 8px;
-    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.18);
-    border-top: 1px solid var(--light-grey);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.14);
+    border-top: 1px solid rgba(15, 60, 25, 0.08);
   }
   /* Push page bottom padding up so footer copy isn't trapped behind sticky bar */
   .usturf-lp-footer { padding-bottom: 90px; }
@@ -1204,32 +1207,59 @@ body.usturf-lp-modal-open { overflow: hidden; }
   }
 
   // Push any third-party chat widget UP so it floats above the sticky
-  // CTA bar on mobile. Chat widgets typically mount async after page
-  // load, so we re-run this on a delay. Heuristic: any fixed-positioned
-  // bottom-right element within ~70px of bottom-right corner = chat.
+  // CTA bar on mobile. Chat widgets mount async after page load, so we
+  // run continuously via MutationObserver to catch them whenever they
+  // appear. Detection: any fixed-positioned bottom-right element near
+  // the corner that isn't our own sticky CTA.
   function liftChatWidget() {
     if (window.innerWidth > 720) return;
-    var stickyHeight = 80;
-    document.querySelectorAll('iframe, div, button').forEach(function(el) {
+    var stickyHeight = 84;
+    var lpSticky = document.querySelector('.usturf-lp-sticky-cta');
+    var candidates = document.querySelectorAll(
+      'iframe, div, button, ' +
+      // Targeted Shopify Inbox / common chat selectors
+      '[id*="chat"], [class*="chat"], [id*="ShopifyChat"], ' +
+      '[id*="livechat"], [class*="livechat"], ' +
+      '[class*="shopify-app-block"], iframe[src*="messaging"]'
+    );
+    candidates.forEach(function(el) {
+      if (!el || el === lpSticky) return;
       if (el.classList && el.classList.contains('usturf-lp-sticky-cta')) return;
       if (el.closest && el.closest('.usturf-lp-sticky-cta')) return;
+      if (el.getAttribute('data-usturf-lp-lifted') === '1') return;
       var s;
       try { s = window.getComputedStyle(el); } catch (e) { return; }
       if (s.position !== 'fixed') return;
-      var bottom = parseInt(s.bottom, 10);
-      var right = parseInt(s.right, 10);
-      if (isNaN(bottom) || isNaN(right)) return;
-      // Bottom-right anchored, near the corner = likely chat widget
-      if (bottom < 60 && right < 60) {
-        el.style.bottom = (bottom + stickyHeight) + 'px';
-        el.setAttribute('data-usturf-lp-lifted', '1');
-      }
+      var rect;
+      try { rect = el.getBoundingClientRect(); } catch (e) { return; }
+      // Skip elements that don't actually paint or are huge (modals, overlays)
+      if (rect.width === 0 || rect.height === 0) return;
+      if (rect.width > 240 || rect.height > 240) return;
+      // Bottom-right anchored within 100px of the corner = likely chat widget
+      var distFromBottom = window.innerHeight - rect.bottom;
+      var distFromRight = window.innerWidth - rect.right;
+      if (distFromBottom > 100 || distFromRight > 100) return;
+      var currentBottom = parseInt(s.bottom, 10);
+      if (isNaN(currentBottom)) currentBottom = 0;
+      el.style.setProperty('bottom', (currentBottom + stickyHeight) + 'px', 'important');
+      el.setAttribute('data-usturf-lp-lifted', '1');
     });
   }
-  // Run on ready, on load, and a few times after to catch lazy-mounted widgets
-  setTimeout(liftChatWidget, 1500);
-  setTimeout(liftChatWidget, 3500);
-  setTimeout(liftChatWidget, 7000);
+  // Initial sweeps for fast-mounting widgets
+  setTimeout(liftChatWidget, 800);
+  setTimeout(liftChatWidget, 2000);
+  setTimeout(liftChatWidget, 4500);
+  // Continuous catcher for late-mounted widgets via MutationObserver
+  if (window.MutationObserver) {
+    var observerThrottle;
+    var mo = new MutationObserver(function() {
+      clearTimeout(observerThrottle);
+      observerThrottle = setTimeout(liftChatWidget, 250);
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+    // Stop observing after 30s — chat widgets will have mounted by then
+    setTimeout(function() { mo.disconnect(); }, 30000);
+  }
 
   // Run as early as possible to minimize chrome-flash
   if (document.readyState === 'loading') {
