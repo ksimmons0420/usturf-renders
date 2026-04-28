@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:32 PT · build v20 (modal preload + scroll fix + spinner)
-  Search this file for "build v20" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:38 PT · build v21 (JotForm embed handler — proper scroll fix)
+  Search this file for "build v21" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -482,6 +482,18 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
   display: flex;
   flex-direction: column;
 }
+/* Scroll container — replaces the iframe-internal scroll that was janky on iOS.
+   JotForm's embed handler auto-resizes the iframe to its content height, so
+   the iframe itself never scrolls — this wrapper scrolls smoothly via native
+   touch instead, fixing the tap-then-cancel-to-scroll bug. */
+.usturf-lp-modal__scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background: #FFF;
+}
 .usturf-lp-modal__close {
   position: absolute;
   top: 8px;
@@ -503,11 +515,15 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
 }
 .usturf-lp-modal__close:hover { background: #FFF; }
 .usturf-lp-modal__iframe {
-  flex: 1;
+  display: block;
   width: 100%;
   border: 0;
   background: #FFF;
-  -webkit-overflow-scrolling: touch;
+  /* Initial height — JotForm's embed handler resizes this dynamically
+     once the iframe loads + on every internal content change */
+  height: 700px;
+  min-width: 100%;
+  max-width: 100%;
 }
 .usturf-lp-modal__iframe[data-loaded="1"] ~ .usturf-lp-modal__loading {
   display: none;
@@ -1172,16 +1188,20 @@ body.usturf-lp-modal-open { overflow: hidden; }
     <div class="usturf-lp-modal__backdrop" data-modal-close></div>
     <div class="usturf-lp-modal__panel">
       <button type="button" class="usturf-lp-modal__close" aria-label="Close" data-modal-close>×</button>
-      <iframe
-        title="Free estimate form"
-        class="usturf-lp-modal__iframe"
-        data-src="https://form.jotform.com/260847354072156"
-        allow="geolocation; microphone; camera; payment"
-        scrolling="yes"
-        frameborder="0"></iframe>
-      <div class="usturf-lp-modal__loading" aria-hidden="true">
-        <div class="usturf-lp-modal__spinner"></div>
-        <div>Loading your estimate form…</div>
+      <div class="usturf-lp-modal__scroll">
+        <iframe
+          id="JotFormIFrame-260847354072156"
+          title="Free estimate form"
+          class="usturf-lp-modal__iframe"
+          data-src="https://form.jotform.com/260847354072156"
+          allow="geolocation; microphone; camera; payment"
+          allowtransparency="true"
+          scrolling="no"
+          frameborder="0"></iframe>
+        <div class="usturf-lp-modal__loading" aria-hidden="true">
+          <div class="usturf-lp-modal__spinner"></div>
+          <div>Loading your estimate form…</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1207,6 +1227,11 @@ body.usturf-lp-modal-open { overflow: hidden; }
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- JotForm official embed handler — auto-resizes iframe to content height
+     so the modal panel scrolls smoothly instead of the iframe (which has
+     a known iOS scroll-trap bug). Loaded async so it doesn't block the LP. -->
+<script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js" async></script>
 
 <script>
 /* =========================================================================
@@ -1361,6 +1386,16 @@ body.usturf-lp-modal-open { overflow: hidden; }
     if (iframeStarted || !iframe.dataset.src) return;
     iframe.src = iframe.dataset.src;
     iframeStarted = true;
+    // Wire JotForm's official embed handler — auto-resizes the iframe
+    // to its content height on every internal layout change. Net effect:
+    // iframe never needs internal scrolling, the modal scroll container
+    // handles overflow with smooth native touch on iOS.
+    if (window.jotformEmbedHandler) {
+      window.jotformEmbedHandler(
+        "iframe[id='JotFormIFrame-260847354072156']",
+        "https://form.jotform.com/"
+      );
+    }
   }
 
   // Preload JotForm 1.5s after page is interactive — by the time the
