@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 18:50 PT · build v14 (card depth + section pop)
-  Search this file for "build v14" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 18:55 PT · build v15 (sticky mobile CTA + hero sub-promise)
+  Search this file for "build v15" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -214,6 +214,27 @@
   flex-shrink: 0;
 }
 .usturf-lp-hero__cta-row { margin-top: 32px; }
+/* Sub-promise reassurance — sits between CTA and fineprint, reduces form-fill anxiety */
+.usturf-lp-hero__reassurance {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.95) !important;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.usturf-lp-hero__reassurance span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 14px;
+  white-space: nowrap;
+}
+.usturf-lp-hero__reassurance span::before {
+  content: "✓";
+  color: var(--gold);
+  font-weight: 900;
+}
 .usturf-lp-hero__disclaimer {
   margin-top: 14px;
   font-size: 11px;
@@ -356,6 +377,65 @@
 
 /* Anchor offset so CTA scroll-to-form clears the sticky header */
 #usturf-lp-form { scroll-margin-top: 92px; }
+
+/* ---------- Sticky mobile bottom CTA bar ----------
+   Always-visible thumb-zone CTA on phones — converts on mobile because
+   users don't have to scroll back up to a button. Hidden on desktop and
+   when the modal is open. */
+.usturf-lp-sticky-cta { display: none; }
+@media (max-width: 720px) {
+  .usturf-lp-sticky-cta {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    background: #FFFFFF;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.18);
+    border-top: 1px solid var(--light-grey);
+  }
+  /* Push page bottom padding up so footer copy isn't trapped behind sticky bar */
+  .usturf-lp-footer { padding-bottom: 90px; }
+}
+.usturf-lp-sticky-cta__call {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 18px;
+  background: var(--green);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 15px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(79, 174, 69, 0.32);
+}
+.usturf-lp-sticky-cta__primary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--gold);
+  color: var(--black);
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 15px;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(255, 196, 49, 0.4);
+}
+/* Hide sticky bar when modal is open (modal already covers screen) */
+body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
 
 /* ---------- Modal (JotForm popup) ---------- */
 .usturf-lp-modal {
@@ -802,6 +882,11 @@ body.usturf-lp-modal-open { overflow: hidden; }
         <div class="usturf-lp-hero__cta-row">
           <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
         </div>
+        <p class="usturf-lp-hero__reassurance">
+          <span>Free in-home measurement</span>
+          <span>Quote within 24 hours</span>
+          <span>No obligation</span>
+        </p>
         <p class="usturf-lp-hero__disclaimer">
           *Pricing, financing, rebate amounts, and warranty terms subject to change. Contact us for current offers.
         </p>
@@ -992,6 +1077,16 @@ body.usturf-lp-modal-open { overflow: hidden; }
       </div>
     </div>
   </section>
+
+  <!-- ============ STICKY MOBILE BOTTOM CTA BAR ============ -->
+  <div class="usturf-lp-sticky-cta" aria-label="Quick contact actions">
+    <a href="tel:7257352182" class="usturf-lp-sticky-cta__call" aria-label="Call US Turf">
+      📞 Call
+    </a>
+    <button type="button" class="usturf-lp-sticky-cta__primary usturf-lp-modal-open">
+      Get Free Estimate →
+    </button>
+  </div>
 
   <!-- ============ MODAL: JotForm popup ============ -->
   <div class="usturf-lp-modal" id="usturf-lp-jotform-modal" role="dialog" aria-modal="true" aria-label="Free estimate form" aria-hidden="true">
