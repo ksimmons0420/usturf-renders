@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 19:58 PT · build v23 (desktop modal scroll fix — taller iframe + handler retry)
-  Search this file for "build v23" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 20:04 PT · build v24 (modal reparent fix — escapes Shopify .rte transform trap)
+  Search this file for "build v24" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -493,6 +493,23 @@ body.usturf-lp-modal-open .usturf-lp-sticky-cta { display: none !important; }
   -webkit-overflow-scrolling: touch;
   position: relative;
   background: #FFF;
+  /* Always-visible green scrollbar so users see the form scrolls */
+  scrollbar-width: thin;
+  scrollbar-color: #4FAE45 transparent;
+}
+.usturf-lp-modal__scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.usturf-lp-modal__scroll::-webkit-scrollbar-track {
+  background: rgba(15, 60, 25, 0.05);
+}
+.usturf-lp-modal__scroll::-webkit-scrollbar-thumb {
+  background: #4FAE45;
+  border-radius: 5px;
+  border: 2px solid #FFF;
+}
+.usturf-lp-modal__scroll::-webkit-scrollbar-thumb:hover {
+  background: #367D2F;
 }
 .usturf-lp-modal__close {
   position: absolute;
@@ -1299,13 +1316,21 @@ body.usturf-lp-modal-open { overflow: hidden; }
       main.style.maxWidth = 'none';
     }
 
-    // Reparent sticky bottom CTA to <body> so position:fixed pins to
-    // the viewport. Shopify's .rte wrapper has scroll-trigger transforms
-    // that create a new stacking context — fixed-positioned children get
-    // trapped inside that context instead of pinning to viewport.
+    // Reparent sticky bottom CTA AND modal to <body> so position:fixed
+    // pins to the viewport. Shopify's .rte wrapper has scroll-trigger
+    // transforms that create a new stacking context — fixed-positioned
+    // children get trapped inside that context instead of pinning to
+    // viewport. For the modal this caused the popup to render centered
+    // inside the page-content wrapper (thousands of pixels tall) instead
+    // of centered in the viewport — half the form ended up below the
+    // user's screen with no way to reach the submit button.
     var sticky = document.querySelector('.usturf-lp-sticky-cta');
     if (sticky && sticky.parentNode !== document.body) {
       document.body.appendChild(sticky);
+    }
+    var lpModal = document.getElementById('usturf-lp-jotform-modal');
+    if (lpModal && lpModal.parentNode !== document.body) {
+      document.body.appendChild(lpModal);
     }
   }
 
