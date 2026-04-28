@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 18:55 PT · build v15 (sticky mobile CTA + hero sub-promise)
-  Search this file for "build v15" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-27 · 19:02 PT · build v16 (sticky CTA reparent fix)
+  Search this file for "build v16" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -390,7 +390,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 60;
+    z-index: 9000;
     background: #FFFFFF;
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
     gap: 8px;
@@ -1187,6 +1187,15 @@ body.usturf-lp-modal-open { overflow: hidden; }
       main.style.padding = '0';
       main.style.margin = '0';
       main.style.maxWidth = 'none';
+    }
+
+    // Reparent sticky bottom CTA to <body> so position:fixed pins to
+    // the viewport. Shopify's .rte wrapper has scroll-trigger transforms
+    // that create a new stacking context — fixed-positioned children get
+    // trapped inside that context instead of pinning to viewport.
+    var sticky = document.querySelector('.usturf-lp-sticky-cta');
+    if (sticky && sticky.parentNode !== document.body) {
+      document.body.appendChild(sticky);
     }
   }
 
