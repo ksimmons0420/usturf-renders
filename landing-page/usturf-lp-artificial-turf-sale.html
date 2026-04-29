@@ -1,6 +1,6 @@
 <!--
-  US TURF LP · VERSION 2026-04-27 · 20:04 PT · build v24 (modal reparent fix — escapes Shopify .rte transform trap)
-  Search this file for "build v24" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-04-28 · build v25 (hero left-align headline, removed duplicate left-column CTA)
+  Search this file for "build v25" to confirm you have the latest paste.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -154,6 +154,7 @@
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.01em;
+  text-align: left;
   text-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4);
 }
 .usturf-lp-hero__copy h1 strong {
@@ -161,6 +162,7 @@
   color: var(--gold);
   font-size: 64px;
   margin-top: 6px;
+  text-align: left;
   text-shadow: 0 3px 14px rgba(0,0,0,0.55), 0 1px 4px rgba(0,0,0,0.45);
 }
 .usturf-lp-hero__sub {
@@ -184,6 +186,11 @@
 }
 .usturf-lp .usturf-lp-hero__copy h1 strong {
   color: #FFC431 !important;
+}
+/* Force left-align — some Shopify themes force-center H1s with !important */
+.usturf-lp .usturf-lp-hero__copy h1,
+.usturf-lp .usturf-lp-hero__copy h1 strong {
+  text-align: left !important;
 }
 .usturf-lp-hero__features {
   list-style: none;
@@ -214,9 +221,10 @@
   flex-shrink: 0;
 }
 .usturf-lp-hero__cta-row { margin-top: 32px; }
-/* Sub-promise reassurance — sits between CTA and fineprint, reduces form-fill anxiety */
+/* Sub-promise reassurance — reduces form-fill anxiety; spacing tuned for layout
+   without a left-column CTA (form card on the right is the primary path). */
 .usturf-lp-hero__reassurance {
-  margin-top: 14px;
+  margin-top: 28px;
   font-size: 13px;
   font-weight: 600;
   color: rgba(255,255,255,0.95) !important;
@@ -992,9 +1000,6 @@ body.usturf-lp-modal-open { overflow: hidden; }
           <li><span class="usturf-lp-hero__check">✓</span> Lifetime warranty on installation</li>
           <li><span class="usturf-lp-hero__check">✓</span> 100% free, transparent estimates</li>
         </ul>
-        <div class="usturf-lp-hero__cta-row">
-          <a href="#usturf-lp-form" class="usturf-lp-cta">Get My Free Turf Estimate</a>
-        </div>
         <p class="usturf-lp-hero__reassurance">
           <span>Free in-home measurement</span>
           <span>Quote within 24 hours</span>
