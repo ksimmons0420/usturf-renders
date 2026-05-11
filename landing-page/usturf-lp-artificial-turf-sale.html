@@ -1,7 +1,13 @@
 <!--
-  US TURF LP · VERSION 2026-05-06 · build v26 (PostHog snippet + bundled A/B test framework)
-  Search this file for "build v26" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-05-11 · build v27 (mobile-flip experiment — lp-bundled-test concluded)
+  Search this file for "build v27" to confirm you have the latest paste.
   Search this file for "POSTHOG INTEGRATION" to find the analytics + experiment block.
+  Change log:
+    - v27: lp-bundled-test variant_b lost (mobile-fold density confirmed via Clarity:
+           22.1% avg mobile scroll depth on social2026). Removed bundled-changes JS.
+           New experiment `lp-mobile-flip-test`: variant_b flips form-card above
+           hero copy on mobile (max-width: 900px) to put primary CTA inside the
+           top scroll-depth band.
   =============================================================================
   US Turf — Artificial Turf Sale Landing Page
   Drop-in HTML for Shopify Pages.
@@ -1258,16 +1264,21 @@ body.usturf-lp-modal-open { overflow: hidden; }
      so the modal panel scrolls smoothly instead of the iframe (which has
      a known iOS scroll-trap bug). Loaded async so it doesn't block the LP. -->
 <!-- ============================================================================
-     POSTHOG INTEGRATION — analytics + bundled A/B test (build v26)
+     POSTHOG INTEGRATION — analytics + mobile-flip A/B test (build v27)
      ============================================================================
      Project: US Turf · Token: phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS
      Host: https://us.i.posthog.com (US Cloud)
-     Experiment flag: lp-bundled-test ; variants: control | variant_b (50/50)
-     Variant_b applies 3 changes from competitor teardown:
-       1. Rebate copy — "up to $7/sq.ft" → "$5 SNWA + $2 LVVWD = $7/sq.ft"
-       2. Hero feature row — 3 checkmarks → 4 stat items including 472 reviews
-       3. License row — adds NV B2/C3/C4/C10 license badges below hero copy
-     Conversion event: lead_form_submitted (fires when JotForm reports success)
+
+     Active experiment flag: lp-mobile-flip-test ; variants: control | variant_b (50/50)
+     Variant_b: flips form-card above hero copy on mobile (viewport < 900px)
+     so the primary CTA falls inside the user's scroll band (Clarity data showed
+     22.1% avg mobile scroll depth — most users never reached the form card
+     under the original layout).
+
+     Concluded experiment: lp-bundled-test (variant_b LOST 2026-05-11). Tracking
+     hooks below still send experiment_assigned events for any flag still active.
+
+     Conversion event: lead_form_submitted (fires on /pages/thank-you)
      Funnel events: lp_cta_clicked, lp_modal_opened
      ============================================================================ -->
 <script>
@@ -1282,23 +1293,16 @@ posthog.init('phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS', {
 });
 </script>
 
-<!-- Variant CSS — applied only when body has .usturf-lp-variant-b -->
+<!-- Variant CSS — mobile-flip experiment (build v27)
+     When body has .usturf-lp-mobile-flip class AND viewport <= 900px,
+     swap visual order so form-card renders FIRST on mobile, hero copy SECOND.
+     Brings primary CTA into the top scroll band. -->
 <style>
-.usturf-lp-license-row {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-  text-transform: uppercase; color: #FFF;
-}
-.usturf-lp-license-row__chip {
-  background: rgba(255,255,255,0.16);
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  padding: 7px 11px; border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.22);
-  white-space: nowrap;
-}
-@media (max-width: 768px) {
-  .usturf-lp-license-row { gap: 6px; margin-top: 12px; }
-  .usturf-lp-license-row__chip { font-size: 10px; padding: 6px 9px; }
+@media (max-width: 900px) {
+  body.usturf-lp-mobile-flip .usturf-lp-hero__copy { order: 2; }
+  body.usturf-lp-mobile-flip .usturf-lp-form-card { order: 1; }
+  /* Tighten gap when form-card is on top — less whitespace between CTA and trust signals */
+  body.usturf-lp-mobile-flip .usturf-lp-hero__inner { gap: 20px; }
 }
 </style>
 
@@ -1540,60 +1544,27 @@ posthog.init('phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS', {
 </script>
 
 <!-- ============================================================================
-     POSTHOG EXPERIMENT + CONVERSION TRACKING (build v26)
-     Reads feature flag `lp-bundled-test` and applies variant_b transforms.
+     POSTHOG EXPERIMENT + CONVERSION TRACKING (build v27)
+     Reads feature flag `lp-mobile-flip-test` and applies the mobile-flip
+     transform (form-card above hero copy on viewport <= 900px).
      Tracks lp_cta_clicked, lp_modal_opened, lead_form_submitted as funnel events.
      ============================================================================ -->
 <script>
 (function() {
   if (!window.posthog || typeof posthog.onFeatureFlags !== 'function') return;
 
-  function applyVariantB() {
-    document.body.classList.add('usturf-lp-variant-b');
-
-    // 1. Rebate copy — "up to $7/sq.ft" → "$5 SNWA + $2 LVVWD = $7/sq.ft"
-    var sub = document.querySelector('.usturf-lp .usturf-lp-hero__sub');
-    if (sub) {
-      sub.innerHTML = 'Las Vegas homeowners may qualify for <strong style="font-weight:700;">$5 SNWA + $2 LVVWD = $7/sq. ft back</strong>. Family-owned Vegas turf experts since 2003 — fully licensed, fully insured, built for the desert.';
-    }
-
-    // 2. Hero feature row — 3 checkmarks → 4 stat items (price, financing, warranty, reviews)
-    var features = document.querySelector('.usturf-lp .usturf-lp-hero__features');
-    if (features) {
-      features.innerHTML =
-        '<li><span class="usturf-lp-hero__check">✓</span> $4.99/sq.ft starting price</li>' +
-        '<li><span class="usturf-lp-hero__check">✓</span> 0% interest for 18 months</li>' +
-        '<li><span class="usturf-lp-hero__check">✓</span> Lifetime warranty included</li>' +
-        '<li><span class="usturf-lp-hero__check">✓</span> 4.7★ across 472 Google reviews</li>';
-    }
-
-    // 3. License row — append NV contractor license badges below feature list
-    var heroCopy = document.querySelector('.usturf-lp .usturf-lp-hero__copy');
-    if (heroCopy && !heroCopy.querySelector('.usturf-lp-license-row')) {
-      var row = document.createElement('div');
-      row.className = 'usturf-lp-license-row';
-      row.setAttribute('aria-label', 'Nevada contractor licenses');
-      row.innerHTML =
-        '<span class="usturf-lp-license-row__chip">NV B2 #0081302</span>' +
-        '<span class="usturf-lp-license-row__chip">C3 #0081384</span>' +
-        '<span class="usturf-lp-license-row__chip">C4 #0081385</span>' +
-        '<span class="usturf-lp-license-row__chip">C10 #0089330</span>';
-      // Insert after features list, before reassurance copy
-      var features = heroCopy.querySelector('.usturf-lp-hero__features');
-      if (features && features.parentNode) {
-        features.parentNode.insertBefore(row, features.nextSibling);
-      } else {
-        heroCopy.appendChild(row);
-      }
-    }
+  // The mobile-flip variant just adds a body class. The actual layout change
+  // is pure CSS (see <style> block above with usturf-lp-mobile-flip rules).
+  function applyMobileFlip() {
+    document.body.classList.add('usturf-lp-mobile-flip');
   }
 
   // Wait for flags then apply (PostHog returns control or variant_b)
   posthog.onFeatureFlags(function() {
-    var variant = posthog.getFeatureFlag('lp-bundled-test') || 'control';
-    if (variant === 'variant_b') applyVariantB();
+    var variant = posthog.getFeatureFlag('lp-mobile-flip-test') || 'control';
+    if (variant === 'variant_b') applyMobileFlip();
     posthog.capture('experiment_assigned', {
-      experiment: 'lp-bundled-test',
+      experiment: 'lp-mobile-flip-test',
       variant: variant
     });
   });
