@@ -1,8 +1,13 @@
 <!--
-  US TURF LP · VERSION 2026-05-11 · build v28 (mobile-flip on lp-bundled-test flag)
-  Search this file for "build v28" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-05-12 · build v29 (form-funnel events for phantom-lead diagnosis)
+  Search this file for "build v29" to confirm you have the latest paste.
   Search this file for "POSTHOG INTEGRATION" to find the analytics + experiment block.
   Change log:
+    - v29: Funnel events for phantom-lead diagnosis. Adds lp_form_engaged
+           (modal open ≥5s) and lp_form_submit_attempted (postMessage OR
+           beforeunload-while-modal-open). Lets us see the gap between
+           submit-clicked vs actual JotForm submissions — the source of the
+           ~38% Meta over-reporting found in the May 5-11 truth check.
     - v28: Reuse the existing `lp-bundled-test` flag with a new variant_b behavior.
            Variant_b now flips form-card above hero copy on mobile (max-width: 900px).
            Flag reset to control 50% / variant_b 50%, 100% rollout. Track via HogQL
@@ -1552,10 +1557,18 @@ posthog.init('phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS', {
 </script>
 
 <!-- ============================================================================
-     POSTHOG EXPERIMENT + CONVERSION TRACKING (build v28)
+     POSTHOG EXPERIMENT + CONVERSION TRACKING (build v29)
      Reads feature flag `lp-bundled-test` and applies the mobile-flip transform
      (form-card above hero copy on viewport <= 900px) when variant_b is assigned.
-     Tracks lp_cta_clicked, lp_modal_opened, lead_form_submitted as funnel events.
+     Funnel events captured (in order):
+       1. lp_cta_clicked            — any CTA that should open the modal
+       2. lp_modal_opened           — modal actually opened (aria-hidden=false)
+       3. lp_form_engaged           — modal stayed open >=5s (intent signal)
+       4. lp_form_submit_attempted  — fires on JotForm postMessage OR pre-redirect
+                                       beforeunload (catches phantom-lead source)
+       5. lead_form_submitted       — JotForm postMessage success (rarely fires,
+                                       see thank-you-page snippet for the canonical
+                                       conversion event)
      ============================================================================ -->
 <script>
 (function() {
@@ -1591,23 +1604,49 @@ posthog.init('phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS', {
     });
   });
 
-  // Funnel: modal opened (separate from CTA click — one CTA can be clicked
-  // without opening the modal if the script aborts)
+  // ─────────────────────────────────────────────────────────────────────────
+  // Funnel: modal opened + engaged + submit-attempted
+  // ─────────────────────────────────────────────────────────────────────────
   var modal = document.getElementById('usturf-lp-modal');
+  var modalOpenedAt = null;
+  var engagedFired = false;
+  var submitAttemptedFired = false;
+
+  function modalIsOpen() {
+    return !!modal && modal.getAttribute('aria-hidden') === 'false';
+  }
+
   if (modal) {
     var lastState = modal.getAttribute('aria-hidden');
     new MutationObserver(function() {
       var state = modal.getAttribute('aria-hidden');
+      // Transition: closed → open
       if (state === 'false' && lastState !== 'false') {
         posthog.capture('lp_modal_opened');
+        modalOpenedAt = Date.now();
+        engagedFired = false;
+        submitAttemptedFired = false;
+        // After 5s with the modal still open, count as engagement
+        setTimeout(function() {
+          if (modalIsOpen() && !engagedFired) {
+            engagedFired = true;
+            posthog.capture('lp_form_engaged', {
+              dwell_seconds: Math.round((Date.now() - modalOpenedAt) / 1000)
+            });
+          }
+        }, 5000);
+      }
+      // Transition: open → closed (without redirect — user closed via X or backdrop)
+      if (state !== 'false' && lastState === 'false') {
+        modalOpenedAt = null;
       }
       lastState = state;
     }).observe(modal, { attributes: true, attributeFilter: ['aria-hidden'] });
   }
 
-  // Conversion: JotForm submission success — listen for postMessage from iframe.
-  // JotForm's submission lifecycle posts events containing "submission-completed",
-  // "submissionCompleted", or "thanksPage" depending on form config / version.
+  // Submit attempt (path A): JotForm postMessage lifecycle events
+  // JotForm sends "submission-started" / "submitButton:disabled" right after the
+  // user clicks the submit button (before the success/failure outcome).
   window.addEventListener('message', function(e) {
     if (!e.data) return;
     var raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data);
@@ -1615,11 +1654,42 @@ posthog.init('phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS', {
     var isJotform = lower.indexOf('jotform') !== -1 || lower.indexOf('jotfor.ms') !== -1 ||
                     (e.origin && e.origin.indexOf('jotform') !== -1);
     if (!isJotform) return;
+
+    // Submit-clicked signals
+    if (!submitAttemptedFired && (
+        lower.indexOf('submission-started') !== -1 ||
+        lower.indexOf('submissionstarted') !== -1 ||
+        lower.indexOf('submitbutton:disabled') !== -1 ||
+        lower.indexOf('submission-failed') !== -1)) {
+      submitAttemptedFired = true;
+      posthog.capture('lp_form_submit_attempted', {
+        source: 'jotform_postmessage',
+        dwell_seconds: modalOpenedAt ? Math.round((Date.now() - modalOpenedAt) / 1000) : null
+      });
+    }
+
+    // Success — usually superseded by the thank-you-page capture (JotForm
+    // redirects the parent before this often fires, but kept as a backstop).
     if (lower.indexOf('submission-completed') !== -1 ||
         lower.indexOf('submissioncompleted') !== -1 ||
         lower.indexOf('thankspage') !== -1) {
-      posthog.capture('lead_form_submitted', { source: 'jotform' });
+      posthog.capture('lead_form_submitted', { source: 'jotform_postmessage' });
     }
+  });
+
+  // Submit attempt (path B): JotForm redirects the parent window on submit, so
+  // a beforeunload while the modal is OPEN is a strong submit-attempt signal.
+  // PostHog uses sendBeacon under the hood for unload-time captures so this
+  // event reliably reaches the server.
+  window.addEventListener('beforeunload', function() {
+    if (submitAttemptedFired) return;            // already fired via postMessage
+    if (!modalIsOpen()) return;                  // modal closed → user navigated away on purpose
+    if (modalOpenedAt && (Date.now() - modalOpenedAt) < 2000) return; // <2s = bounce
+    submitAttemptedFired = true;
+    posthog.capture('lp_form_submit_attempted', {
+      source: 'beforeunload_modal_open',
+      dwell_seconds: modalOpenedAt ? Math.round((Date.now() - modalOpenedAt) / 1000) : null
+    });
   });
 })();
 </script>
