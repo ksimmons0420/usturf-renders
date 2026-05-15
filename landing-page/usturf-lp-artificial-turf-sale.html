@@ -1,8 +1,16 @@
 <!--
-  US TURF LP · VERSION 2026-05-12 · build v29 (form-funnel events for phantom-lead diagnosis)
-  Search this file for "build v29" to confirm you have the latest paste.
+  US TURF LP · VERSION 2026-05-14 · build v30 (UTM + fbclid passthrough to JotForm)
+  Search this file for "build v30" to confirm you have the latest paste.
   Search this file for "POSTHOG INTEGRATION" to find the analytics + experiment block.
   Change log:
+    - v30: UTM + fbclid passthrough. Reads utm_source, utm_medium, utm_campaign,
+           utm_content, utm_term, fbclid, gclid from window.location.search and
+           document.referrer, then appends them to the JotForm iframe src so the
+           five new hidden fields on form 260847354072156 (utm_source,
+           utm_campaign, utm_content, fbclid, referrer) auto-populate per
+           submission. Closes the channel-attribution gap surfaced in the
+           May 5-11 truth check (Meta-attributed leads vs Meta-form submissions
+           were comparing different sets of leads).
     - v29: Funnel events for phantom-lead diagnosis. Adds lp_form_engaged
            (modal open ≥5s) and lp_form_submit_attempted (postMessage OR
            beforeunload-while-modal-open). Lets us see the gap between
@@ -1489,9 +1497,33 @@ posthog.init('phc_zhy3pqGXd6SQaGCzQJtC4GNBu7ThEX2WDyuRomMspDoS', {
     return false;
   }
 
+  // Capture marketing attribution from URL params + referrer and pass into
+  // JotForm via prefilled hidden fields. JotForm matches URL params to field
+  // names — we added utm_source, utm_campaign, utm_content, fbclid, referrer
+  // to form 260847354072156 so every Meta-form submission is tagged with the
+  // acquisition channel for proper CPL attribution later.
+  function buildJotformSrc(baseSrc) {
+    try {
+      var search = new URLSearchParams(window.location.search);
+      var passthrough = ['utm_source', 'utm_medium', 'utm_campaign',
+                         'utm_content', 'utm_term', 'fbclid', 'gclid'];
+      var out = [];
+      passthrough.forEach(function(k) {
+        var v = search.get(k);
+        if (v) out.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+      });
+      var ref = document.referrer || '';
+      if (ref) out.push('referrer=' + encodeURIComponent(ref.slice(0, 500)));
+      if (!out.length) return baseSrc;
+      return baseSrc + (baseSrc.indexOf('?') === -1 ? '?' : '&') + out.join('&');
+    } catch (e) {
+      return baseSrc;
+    }
+  }
+
   function startIframeLoad() {
     if (iframeStarted || !iframe.dataset.src) return;
-    iframe.src = iframe.dataset.src;
+    iframe.src = buildJotformSrc(iframe.dataset.src);
     iframeStarted = true;
     // Try to attach JotForm's embed handler now. If the async script
     // hasn't loaded yet, poll for up to 8s — we don't want to silently
